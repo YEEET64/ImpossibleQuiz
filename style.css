@@ -1,8 +1,21 @@
+@font-face {
+    font-family: "Hand Of Sean";
+    src: url("sonstiges/Hand_Of_Sean_Demo.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+[hidden] {
+    display: none !important;
+}
+
 body {
     margin: 0;
-    min-height: 100vh;
+    min-height: 100svh;
+    padding: 1rem;
+    box-sizing: border-box;
     background-color: white;
-    font-family: Arial, sans-serif;
+    font-family: "Hand Of Sean", sans-serif;
     text-align: center;
     display: flex;
     justify-content: center;
@@ -17,17 +30,107 @@ body {
 
 .start-text {
     color: blue;
-    font-size: 32px;
+    font-size: clamp(1.75rem, 6vw, 4rem);
     font-weight: bold;
 }
 
 .start-button {
-    margin-top: 40px;
-    padding: 12px 35px;
+    font-family: "Hand Of Sean", sans-serif;
+    margin-top: clamp(1rem, 5vw, 2.5rem);
+    padding: clamp(0.6rem, 2vw, 1rem) clamp(1.5rem, 6vw, 3rem);
     background-color: white;
-    border: 4px solid blue;
+    border: clamp(3px, 0.8vw, 5px) solid blue;
     border-radius: 10px;
     color: blue;
-    font-size: 22px;
+    font-size: clamp(1.25rem, 4vw, 2rem);
     font-weight: bold;
+}
+
+.quiz-screen {
+    position: relative;
+    width: 100%;
+    min-height: calc(100svh - 2rem);
+}
+
+.game-status {
+    position: absolute;
+    top: clamp(0.5rem, 3vw, 2rem);
+    color: blue;
+    font-size: clamp(1.25rem, 3.4vw, 2.2rem);
+    font-weight: bold;
+}
+
+.level-status {
+    left: clamp(0.5rem, 3vw, 2rem);
+}
+
+.lives-status {
+    right: clamp(0.5rem, 3vw, 2rem);
+}
+
+.question-area {
+    width: min(90%, 52rem);
+    margin: 0 auto;
+    padding-top: clamp(5rem, 14vh, 8rem);
+}
+
+.question {
+    margin: 0 auto;
+    color: blue;
+    font-size: clamp(1.7rem, 6vw, 4rem);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+
+.answer-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.6rem, 2vw, 1.2rem);
+    width: 100%;
+    margin-top: clamp(1.5rem, 5vw, 3rem);
+}
+
+.answer-button {
+    width: 100%;
+    box-sizing: border-box;
+    padding: clamp(0.45rem, 1.5vw, 0.8rem);
+    background-color: white;
+    border: clamp(3px, 0.8vw, 5px) solid blue;
+    border-radius: 10px;
+    color: blue;
+    font-family: "Hand Of Sean", sans-serif;
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    font-weight: bold;
+    line-height: 1.15;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.game-over {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    box-sizing: border-box;
+    padding: 1rem;
+    background-color: black;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.game-over-title {
+    font-size: clamp(2.5rem, 10vw, 7rem);
+    line-height: 1.5;
+    font-weight: bold;
+}
+
+.game-over-restart {
+    width: min(90%, 42rem);
+    margin-top: clamp(1.5rem, 5vw, 3rem);
+    font-size: clamp(1.25rem, 4vw, 2.5rem);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
 }

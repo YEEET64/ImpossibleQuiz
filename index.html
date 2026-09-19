@@ -11,10 +11,26 @@
 <body>
 
     <div class="start-container">
-        <div class="start-text">Impossible Quiz<br>Remake Deluxe</div>
+        <div class="start-text">IMPOSSIBLE QUIZ<br>REMAKE DELUXE</div>
 
-        <button class="start-button" id="startButton">Ja</button>
+        <button class="start-button" id="startButton">START</button>
     </div>
+
+    <main class="quiz-screen" id="quizScreen" hidden>
+        <div class="game-status level-status">LEVEL: <span id="levelNumber">1</span></div>
+        <div class="game-status lives-status">LEBEN: <span id="livesNumber">3</span></div>
+
+        <div class="question-area">
+            <h1 class="question" id="question"></h1>
+
+            <div class="answer-buttons" id="answerButtons"></div>
+        </div>
+    </main>
+
+    <main class="game-over" id="gameOverScreen" hidden>
+        <div class="game-over-title">DU HAST<br>VERLOREN!</div>
+        <div class="game-over-restart">LADE DIE SEITE NEU, UM NEU ZU STARTEN!</div>
+    </main>
 
     <script src="script.js"></script>
 
