@@ -17,13 +17,14 @@
     </div>
 
     <main class="quiz-screen" id="quizScreen" hidden>
-        <div class="game-status level-status">LEVEL: <span id="levelNumber">1</span></div>
+        <button class="game-status level-status" id="levelStatus" type="button">LEVEL: <span id="levelNumber">1</span></button>
         <div class="game-status lives-status">LEBEN: <span id="livesNumber">3</span></div>
 
         <div class="question-area">
             <h1 class="question" id="question"></h1>
 
             <div class="answer-buttons" id="answerButtons"></div>
+            <p class="answer-feedback" id="answerFeedback" aria-live="polite"></p>
         </div>
     </main>
 

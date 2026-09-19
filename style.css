@@ -55,13 +55,21 @@ body {
 .game-status {
     position: absolute;
     top: clamp(0.5rem, 3vw, 2rem);
+    padding: 0;
+    border: 0;
+    background: none;
     color: blue;
+    font-family: "Hand Of Sean", sans-serif;
     font-size: clamp(1.25rem, 3.4vw, 2.2rem);
     font-weight: bold;
 }
 
 .level-status {
     left: clamp(0.5rem, 3vw, 2rem);
+}
+
+.level-status.is-clickable {
+    cursor: pointer;
 }
 
 .lives-status {
@@ -104,6 +112,14 @@ body {
     line-height: 1.15;
     white-space: normal;
     overflow-wrap: anywhere;
+}
+
+.answer-feedback {
+    min-height: 1.3em;
+    margin: clamp(0.8rem, 2vw, 1.5rem) 0 0;
+    color: red;
+    font-size: clamp(1.1rem, 3vw, 1.8rem);
+    font-weight: bold;
 }
 
 .game-over {
