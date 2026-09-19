@@ -73,8 +73,34 @@ body {
     cursor: pointer;
 }
 
-.lives-status {
+.lives-wrapper {
+    position: absolute;
+    top: clamp(0.5rem, 3vw, 2rem);
     right: clamp(0.5rem, 3vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+}
+
+.lives-status {
+    position: static;
+    right: auto;
+}
+
+.bomb-status {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    line-height: 0;
+}
+
+.bomb-image {
+    width: clamp(4.4rem, 8vw, 8rem);
+    height: auto;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 0 0.2rem rgba(0, 0, 0, 0.15));
 }
 
 .question-area {

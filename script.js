@@ -9,10 +9,14 @@ const answerFeedback = document.getElementById("answerFeedback");
 const levelStatus = document.getElementById("levelStatus");
 const levelNumberElement = document.getElementById("levelNumber");
 const livesNumberElement = document.getElementById("livesNumber");
+const bombStatus = document.getElementById("bombStatus");
+const bombImage = document.getElementById("bombImage");
 let levelnumber = 0;
 let lives = 3;
 let level12BlinkTimeout;
 let level12BlinkResetTimeout;
+let bombTimerId = null;
+let bombCounter = 10;
 
 const quizLevels = {
     1: {
@@ -170,9 +174,77 @@ const quizLevels = {
             "BAYRISCH"
         ],
         correctAnswer: 3
+    },
+    16: {
+        question: "OH! EINE BOMBE!",
+        bomb: true,
+        answers: [
+            "BUMM",
+            "TÜRKEN GRRRR",
+            "BOMBASTISCH",
+            "SKIP"
+        ],
+        correctAnswer: 4
     }
 
 };
+
+function updateBombDisplay() {
+    if (bombImage) {
+        bombImage.src = `sonstiges/Bilder/Bombe/Unbenanntes_Projekt (${bombCounter}).png`;
+    }
+}
+
+function stopBombTimer() {
+    if (bombTimerId !== null) {
+        clearInterval(bombTimerId);
+        bombTimerId = null;
+    }
+}
+
+function resetBombState() {
+    stopBombTimer();
+    bombCounter = 10;
+
+    if (bombStatus) {
+        bombStatus.hidden = true;
+    }
+
+    updateBombDisplay();
+}
+
+function startBombLevel(levelData) {
+    if (!levelData || !levelData.bomb) {
+        resetBombState();
+        return;
+    }
+
+    bombCounter = 10;
+    updateBombDisplay();
+
+    if (bombStatus) {
+        bombStatus.hidden = false;
+    }
+
+    stopBombTimer();
+    bombTimerId = setInterval(function() {
+        if (bombCounter <= 0) {
+            stopBombTimer();
+            return;
+        }
+
+        bombCounter -= 1;
+        updateBombDisplay();
+
+        if (bombCounter === 0) {
+            stopBombTimer();
+            lives = 0;
+            livesNumberElement.textContent = lives;
+            quizScreen.hidden = true;
+            gameOverScreen.hidden = false;
+        }
+    }, 1000);
+}
 
 function showLevel(level) {
     const levelData = quizLevels[level];
@@ -181,6 +253,11 @@ function showLevel(level) {
     clearTimeout(level12BlinkResetTimeout);
 
     levelNumberElement.textContent = level;
+    if (!levelData || !levelData.bomb) {
+        resetBombState();
+    } else {
+        startBombLevel(levelData);
+    }
     answerFeedback.textContent = "";
     levelStatus.classList.toggle("is-clickable", level === 4);
 
@@ -205,9 +282,29 @@ function showLevel(level) {
         answerButton.type = "button";
         answerButton.textContent = answer.trim() === "" ? "\u00a0" : answer;
         answerButton.addEventListener("click", function() {
+            if (level === 16 && index === 0) {
+                stopBombTimer();
+                bombCounter = 10;
+                if (bombStatus) {
+                    bombStatus.hidden = true;
+                }
+                updateBombDisplay();
+                lives = 0;
+                livesNumberElement.textContent = lives;
+                quizScreen.hidden = true;
+                gameOverScreen.hidden = false;
+                return;
+            }
+
             if (level === 10 && index === 0) {
                 lives = 0;
                 livesNumberElement.textContent = lives;
+                stopBombTimer();
+                bombCounter = 10;
+                if (bombStatus) {
+                    bombStatus.hidden = true;
+                }
+                updateBombDisplay();
                 quizScreen.hidden = true;
                 gameOverScreen.hidden = false;
                 return;
@@ -218,6 +315,15 @@ function showLevel(level) {
             }
 
             if (index + 1 === levelData.correctAnswer) {
+                if (levelData.bomb) {
+                    stopBombTimer();
+                    bombCounter = 10;
+                    if (bombStatus) {
+                        bombStatus.hidden = true;
+                    }
+                    updateBombDisplay();
+                }
+
                 levelnumber += 1;
                 showLevel(levelnumber);
             } else {
@@ -225,6 +331,12 @@ function showLevel(level) {
                 livesNumberElement.textContent = lives;
 
                 if (lives === 0) {
+                    stopBombTimer();
+                    bombCounter = 10;
+                    if (bombStatus) {
+                        bombStatus.hidden = true;
+                    }
+                    updateBombDisplay();
                     quizScreen.hidden = true;
                     gameOverScreen.hidden = false;
                 }
@@ -247,6 +359,8 @@ function showLevel(level) {
 startButton.addEventListener("click", function() {
     levelnumber = 1;
     lives = 3;
+    bombCounter = 10;
+    resetBombState();
     startContainer.hidden = true;
     quizScreen.hidden = false;
     showLevel(levelnumber);

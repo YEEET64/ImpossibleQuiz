@@ -18,7 +18,13 @@
 
     <main class="quiz-screen" id="quizScreen" hidden>
         <button class="game-status level-status" id="levelStatus" type="button">LEVEL: <span id="levelNumber">1</span></button>
-        <div class="game-status lives-status">LEBEN: <span id="livesNumber">3</span></div>
+
+        <div class="lives-wrapper">
+            <div class="game-status lives-status">LEBEN: <span id="livesNumber">3</span></div>
+            <div class="bomb-status" id="bombStatus" hidden aria-live="polite">
+                <img class="bomb-image" id="bombImage" alt="Bombenanzeige" src="sonstiges/Bilder/Bombe/Unbenanntes_Projekt (10).png">
+            </div>
+        </div>
 
         <div class="question-area">
             <h1 class="question" id="question"></h1>
