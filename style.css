@@ -14,6 +14,7 @@ body {
     min-height: 100svh;
     padding: 1rem;
     box-sizing: border-box;
+    --quiz-border-width: clamp(3px, 0.8vw, 5px);
     background-color: white;
     font-family: "Hand Of Sean", sans-serif;
     text-align: center;
@@ -90,6 +91,19 @@ body {
     overflow-wrap: anywhere;
 }
 
+.level-image {
+    display: block;
+    width: min(100%, 24rem, 28vh);
+    height: auto;
+    box-sizing: border-box;
+    margin: clamp(1rem, 3vw, 2rem) auto 0;
+    object-fit: contain;
+}
+
+.level-image.has-border {
+    border: var(--quiz-border-width) solid black;
+}
+
 .answer-buttons {
     display: flex;
     flex-direction: column;
@@ -103,7 +117,7 @@ body {
     box-sizing: border-box;
     padding: clamp(0.45rem, 1.5vw, 0.8rem);
     background-color: white;
-    border: clamp(3px, 0.8vw, 5px) solid blue;
+    border: var(--quiz-border-width) solid blue;
     border-radius: 10px;
     color: blue;
     font-family: "Hand Of Sean", sans-serif;
@@ -112,6 +126,10 @@ body {
     line-height: 1.15;
     white-space: normal;
     overflow-wrap: anywhere;
+}
+
+.answer-button.is-blinking {
+    background-color: green;
 }
 
 .answer-feedback {
