@@ -524,6 +524,10 @@ const quizLevels = {
             "*STILLE*"
         ],
         correctAnswer: 4
+    },
+    50  : {
+        question: "VON KLEIN ZU GROß:",
+        bomb: true
     }
 
 
@@ -740,6 +744,54 @@ function setupLevel38Images() {
     answerButtons.appendChild(imageGrid);
 }
 
+function setupLevel50Images() {
+    const imageOrder = [3, 1, 4, 2];
+    const clickOrder = [1, 2, 3, 4];
+    let nextImageIndex = 0;
+    const imageStack = document.createElement("div");
+
+    imageStack.className = "level-50-image-stack";
+
+    imageOrder.forEach(function(imageNumber) {
+        const imageButton = document.createElement("button");
+        const image = document.createElement("img");
+
+        imageButton.className = "level-50-image-button";
+        imageButton.type = "button";
+        imageButton.setAttribute("aria-label", `Bild ${imageNumber}`);
+        image.src = `sonstiges/Bilder/Level 50/Unbenanntes_Projekt (${imageNumber}).png`;
+        image.alt = `Bild ${imageNumber}`;
+        imageButton.appendChild(image);
+        imageButton.addEventListener("click", function() {
+            if (imageNumber !== clickOrder[nextImageIndex]) {
+                playPistolShotSound();
+                lives -= 1;
+                livesNumberElement.textContent = lives;
+
+                if (lives === 0) {
+                    stopBombTimer();
+                    quizScreen.hidden = true;
+                    gameOverScreen.hidden = false;
+                }
+                return;
+            }
+
+            nextImageIndex += 1;
+            imageButton.disabled = true;
+
+            if (nextImageIndex < imageOrder.length) {
+                playDingSound();
+            } else {
+                levelnumber += 1;
+                showLevel(levelnumber);
+            }
+        });
+        imageStack.appendChild(imageButton);
+    });
+
+    answerButtons.appendChild(imageStack);
+}
+
 function showLevel(level) {
     const levelData = quizLevels[level];
 
@@ -821,6 +873,13 @@ function showLevel(level) {
             levelImage.hidden = true;
             answerButtons.replaceChildren();
             setupLevel38Images();
+            return;
+        }
+
+        if (level === 50) {
+            levelImage.hidden = true;
+            answerButtons.replaceChildren();
+            setupLevel50Images();
             return;
         }
     }

@@ -259,6 +259,33 @@ body {
     grid-column: 3;
 }
 
+.level-50-image-stack {
+    --level-50-image-height: clamp(2.5rem, calc((100svh - 15rem) / 4), 10rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(0.15rem, 0.6vw, 0.35rem);
+    width: 100%;
+}
+
+.level-50-image-button {
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: white;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.level-50-image-button img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: var(--level-50-image-height);
+    height: auto;
+    margin: 0 auto;
+}
+
 .level-27-button {
     position: fixed;
     z-index: 5;
