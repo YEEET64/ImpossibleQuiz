@@ -528,6 +528,26 @@ const quizLevels = {
     50  : {
         question: "VON KLEIN ZU GROß:",
         bomb: true
+    },
+    51  : {
+        question: "KANN ANTON BOXEN?",
+        answers: [
+            "AUF JEDEN FALL",
+            "MIT MÜHE VIELLEICHT",
+            "NEIN, ABER JACK KANN",
+            "MIKE TYSON"
+        ],
+        correctAnswer: 3
+    },
+    52  : {
+        question: "KANN ANTON BOXEN?",
+        answers: [
+            "AUF JEDEN FALL",
+            "MIT MÜHE VIELLEICHT",
+            "NEIN, ABER JACK KANN",
+            "MIKE TYSON"
+        ],
+        correctAnswer: 3
     }
 
 
