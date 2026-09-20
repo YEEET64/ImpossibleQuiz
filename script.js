@@ -405,6 +405,9 @@ const quizLevels = {
             "WEIL ALLE KINDER GELD MÖGEN"
         ],
         correctAnswer: 4
+    },
+    38: {
+        question: "ERINNERE DICH AN WAS DU EINKAUFEN MUSST:",
     }
 
 };
@@ -568,6 +571,56 @@ function setupLevel32Input() {
     answerInput.focus();
 }
 
+function setupLevel38Images() {
+    const imageOrder = [1, 4, 5, 6, 7, 2, 8, 3];
+    const correctImages = new Set([1, 2, 3]);
+    const selectedImages = new Set();
+    const imageGrid = document.createElement("div");
+
+    imageGrid.className = "level-38-image-grid";
+
+    imageOrder.forEach(function(imageNumber) {
+        const imageButton = document.createElement("button");
+        const image = document.createElement("img");
+
+        imageButton.className = "level-38-image-button";
+        imageButton.type = "button";
+        imageButton.setAttribute("aria-label", `Bild ${imageNumber}`);
+        image.src = `sonstiges/Bilder/Level 38/Unbenanntes_Projekt (${imageNumber}).png`;
+        image.alt = `Bild ${imageNumber}`;
+        imageButton.appendChild(image);
+        imageButton.addEventListener("click", function() {
+            if (selectedImages.has(imageNumber)) {
+                return;
+            }
+
+            if (!correctImages.has(imageNumber)) {
+                playPistolShotSound();
+                lives -= 1;
+                livesNumberElement.textContent = lives;
+
+                if (lives === 0) {
+                    stopBombTimer();
+                    quizScreen.hidden = true;
+                    gameOverScreen.hidden = false;
+                }
+                return;
+            }
+
+            selectedImages.add(imageNumber);
+            imageButton.classList.add("is-correct");
+
+            if (selectedImages.size === correctImages.size) {
+                levelnumber += 1;
+                showLevel(levelnumber);
+            }
+        });
+        imageGrid.appendChild(imageButton);
+    });
+
+    answerButtons.appendChild(imageGrid);
+}
+
 function showLevel(level) {
     const levelData = quizLevels[level];
 
@@ -642,6 +695,13 @@ function showLevel(level) {
             levelImage.src = "sonstiges/Bilder/Bild32.png";
             answerButtons.replaceChildren();
             setupLevel32Input();
+            return;
+        }
+
+        if (level === 38) {
+            levelImage.hidden = true;
+            answerButtons.replaceChildren();
+            setupLevel38Images();
             return;
         }
     }
