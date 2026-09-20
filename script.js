@@ -11,6 +11,10 @@ const levelNumberElement = document.getElementById("levelNumber");
 const livesNumberElement = document.getElementById("livesNumber");
 const bombStatus = document.getElementById("bombStatus");
 const bombImage = document.getElementById("bombImage");
+const pistolShotSound = new Audio("sonstiges/Sounds/PistolShot.wav");
+pistolShotSound.volume = 0.5;
+const dingSound = new Audio("sonstiges/Sounds/DingSound.mp3");
+dingSound.volume = 0.5;
 let levelnumber = 0;
 let lives = 3;
 let level12BlinkTimeout;
@@ -20,6 +24,17 @@ let bombCounter = 10;
 let animationClickCount = 0;
 let animationImageHandler = null;
 let levelTransitionTimeout = null;
+let hasShownFirstLevel = false;
+
+function playPistolShotSound() {
+    pistolShotSound.currentTime = 0;
+    pistolShotSound.play().catch(function() {});
+}
+
+function playDingSound() {
+    dingSound.currentTime = 0;
+    dingSound.play().catch(function() {});
+}
 
 const quizLevels = {
     1: {
@@ -75,14 +90,14 @@ const quizLevels = {
         correctAnswer: 2
     }, 
     6: {
-        question: "WER HAT DEN KEKS AUS DER DOSE GEKLAUT?",
+        question: "WIE VIELE LÖCHER HAT EIN POLO?",
         answers: [
-            "[INSERT NAME] HAT DEN KEKS AUS DER DOSE GEKLAUT",
-            "JAMAL",
-            "LUIS",
-            "CLANKERS"
+            "EINS",
+            "ZWEI",
+            "DREI",
+            "VIER"
         ],
-        correctAnswer: 1
+        correctAnswer: 4
     },
     7: {
         question: "WAS IST DAS?",
@@ -293,6 +308,103 @@ const quizLevels = {
     27: {
         question: "FINDE!",
         bomb: true,
+    },
+    28: {
+        question: "WAS IST DIE ANTWORT?",
+        answers: [
+            "DAS HIER!",
+            "NEIN, DAS HIER!",
+            "DAS ERSTE!",
+            "ANTWORT"
+        ],
+        correctAnswer: null
+    },
+    29: {
+        question: "WAS TAT DIE DEUTSCHE ARMEE IN EINER RUSSISCHEN STADT 1942? SIE...",
+        answers: [
+            "HABEN MOSKAU ANGEGRIFFEN",
+            "FÖRDERTEN FRIEDEN",
+            "MACHTEN URLAUB",
+            "STALINGRAD"
+        ],
+        correctAnswer: 4
+    },
+    30: {
+        question: "WER HAT DEN KEKS AUS DER DOSE GEKLAUT?",
+        answers: [
+            "[INSERT NAME] HAT DEN KEKS AUS DER DOSE GEKLAUT",
+            "JAMAL",
+            "LUIS",
+            "CLANKERS"
+        ],
+        correctAnswer: 1
+    },
+    31: {
+        question: "WO WAR DIE RICHTIGE ANTWORT IN FRAGE 1?",
+        answers: [
+            "DAS HIER!",
+            "HIER VIELLEICHT",
+            "ODER HIER?",
+            "NE, HIER!"
+        ],
+        correctAnswer: 3
+    },
+    32: {
+        question: "",
+        bomb: true
+    },
+    33: {
+        question: "WIE NENNT MAN EINE FLÜGELLOSE FLIEGE?",
+        answers: [
+            "JASON",
+            "EINE GEHE",
+            "EIN HAUFEN",
+            "EINE DATTEL"
+        ],
+        correctAnswer: 2
+    },
+    34: {
+        question: "WAS IST UNESSBAR?",
+        answers: [
+            "SURSSTRÖMMING",
+            "VEGEMITE",
+            "OLIVEN",
+            "ESCARGOT"
+        ],
+        correctAnswer: 3
+    },
+    35: {
+        question: "WIE MACHST DU DIESES KIND GLÜCKLICH?",
+        image: true,
+        imageBorder: false,
+        answers: [
+            "NEN EURO SPENDEN",
+            "INS GESICHT SPUCKEN",
+            "+500 ROBUX",
+            "67"
+        ],
+        correctAnswer: 1
+    },
+    36: {
+        question: "BIST DU RASSISTISCH?",
+        image: false,
+        answers: [
+            "NEIN",
+            "JA",
+            "VIELLEICHT",
+            "DIE MENSCHEN SIND NUR ALLE ZU SANFT"
+        ],
+        correctAnswer: 1
+    },
+    37: {
+        question: "WARUM HAST DU DANN DAS KIND GELD GEGEBEN?",
+        answers: [
+            "WEIL ER WIE EIN JUDE AUSSAH",
+            "WARUM NICHT?",
+            "ICH MAG KINDER",
+            "WEIL ALLE KINDER GELD MÖGEN"
+        ],
+        correctAnswer: 4
     }
 
 };
@@ -346,6 +458,7 @@ function startBombLevel(levelData) {
 
         if (bombCounter === 0) {
             stopBombTimer();
+            playPistolShotSound();
             lives = 0;
             livesNumberElement.textContent = lives;
             quizScreen.hidden = true;
@@ -400,8 +513,69 @@ function setupImageAnimation(level) {
     levelImage.addEventListener("click", animationImageHandler);
 }
 
+function setupLevel32Input() {
+    const inputForm = document.createElement("form");
+    const answerInput = document.createElement("input");
+    const submitButton = document.createElement("button");
+
+    inputForm.className = "level-32-input-form";
+    answerInput.className = "level-32-input";
+    answerInput.type = "text";
+    answerInput.autocomplete = "off";
+    answerInput.autocapitalize = "none";
+    answerInput.spellcheck = false;
+    answerInput.setAttribute("aria-label", "Antwort für Level 32");
+    submitButton.className = "answer-button level-32-submit";
+    submitButton.type = "submit";
+    submitButton.textContent = "ENTER";
+
+    inputForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        if (answerInput.value.trim().toLowerCase() === "chihuahua") {
+            stopBombTimer();
+            bombCounter = 10;
+            if (bombStatus) {
+                bombStatus.hidden = true;
+            }
+            updateBombDisplay();
+            levelnumber += 1;
+            showLevel(levelnumber);
+            return;
+        }
+
+        playPistolShotSound();
+        lives -= 1;
+        livesNumberElement.textContent = lives;
+        answerInput.value = "";
+
+        if (lives === 0) {
+            stopBombTimer();
+            bombCounter = 10;
+            if (bombStatus) {
+                bombStatus.hidden = true;
+            }
+            updateBombDisplay();
+            quizScreen.hidden = true;
+            gameOverScreen.hidden = false;
+        } else {
+            answerInput.focus();
+        }
+    });
+
+    inputForm.append(answerInput, submitButton);
+    answerButtons.appendChild(inputForm);
+    answerInput.focus();
+}
+
 function showLevel(level) {
     const levelData = quizLevels[level];
+
+    if (hasShownFirstLevel) {
+        playDingSound();
+    } else {
+        hasShownFirstLevel = true;
+    }
 
     clearTimeout(level12BlinkTimeout);
     clearTimeout(level12BlinkResetTimeout);
@@ -421,6 +595,10 @@ function showLevel(level) {
 
     if (!levelData) {
         questionElement.textContent = "DIESES LEVEL KOMMT BALD";
+        levelImage.hidden = true;
+        levelImage.classList.remove("has-border");
+        levelImage.classList.remove("animation-image");
+        levelImage.src = "";
         answerButtons.replaceChildren();
 
         if (level === 23) {
@@ -442,7 +620,31 @@ function showLevel(level) {
         return;
     }
 
-    questionElement.textContent = levelData.question;
+    if (level === 28) {
+        const questionWord = document.createElement("button");
+
+        questionWord.className = "question-word-button";
+        questionWord.type = "button";
+        questionWord.textContent = "WAS";
+        questionWord.addEventListener("click", function() {
+            levelnumber = 29;
+            showLevel(levelnumber);
+        });
+        questionElement.replaceChildren(questionWord, document.createTextNode(" IST DIE ANTWORT?"));
+    } else {
+        questionElement.textContent = levelData.question;
+
+        if (level === 32) {
+            levelImage.hidden = false;
+            levelImage.classList.remove("has-border");
+            levelImage.classList.remove("animation-image");
+            levelImage.alt = "Bild für Level 32";
+            levelImage.src = "sonstiges/Bilder/Bild32.png";
+            answerButtons.replaceChildren();
+            setupLevel32Input();
+            return;
+        }
+    }
 
     if (level === 23) {
         levelImage.hidden = true;
@@ -508,8 +710,24 @@ function showLevel(level) {
         answerButton.type = "button";
         answerButton.textContent = answer.trim() === "" ? "\u00a0" : answer;
         answerButton.addEventListener("click", function() {
+            if (level === 37 && index === 2) {
+                stopBombTimer();
+                playPistolShotSound();
+                bombCounter = 10;
+                if (bombStatus) {
+                    bombStatus.hidden = true;
+                }
+                updateBombDisplay();
+                lives = 0;
+                livesNumberElement.textContent = lives;
+                quizScreen.hidden = true;
+                gameOverScreen.hidden = false;
+                return;
+            }
+
             if (level === 16 && index === 0) {
                 stopBombTimer();
+                playPistolShotSound();
                 bombCounter = 10;
                 if (bombStatus) {
                     bombStatus.hidden = true;
@@ -523,6 +741,7 @@ function showLevel(level) {
             }
 
             if (level === 10 && index === 0) {
+                playPistolShotSound();
                 lives = 0;
                 livesNumberElement.textContent = lives;
                 stopBombTimer();
@@ -564,6 +783,7 @@ function showLevel(level) {
                     showLevel(levelnumber);
                 }
             } else {
+                playPistolShotSound();
                 lives -= 1;
                 livesNumberElement.textContent = lives;
 
@@ -596,6 +816,7 @@ function showLevel(level) {
 startButton.addEventListener("click", function() {
     levelnumber = 1;
     lives = 3;
+    hasShownFirstLevel = false;
     bombCounter = 10;
     resetBombState();
     startContainer.hidden = true;
