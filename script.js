@@ -11,6 +11,8 @@ const levelNumberElement = document.getElementById("levelNumber");
 const livesNumberElement = document.getElementById("livesNumber");
 const bombStatus = document.getElementById("bombStatus");
 const bombImage = document.getElementById("bombImage");
+const debugLevelForm = document.getElementById("debugLevelForm");
+const debugLevelInput = document.getElementById("debugLevelInput");
 const pistolShotSound = new Audio("sonstiges/Sounds/PistolShot.wav");
 pistolShotSound.volume = 0.5;
 const dingSound = new Audio("sonstiges/Sounds/DingSound.mp3");
@@ -608,7 +610,8 @@ function setupLevel38Images() {
             }
 
             selectedImages.add(imageNumber);
-            imageButton.classList.add("is-correct");
+            image.setAttribute("src", `sonstiges/Bilder/Level 38/Gruen (${imageNumber}).png?v=1`);
+            image.alt = `Bild ${imageNumber}, korrekt ausgewählt`;
 
             if (selectedImages.size === correctImages.size) {
                 levelnumber += 1;
@@ -881,6 +884,26 @@ startButton.addEventListener("click", function() {
     resetBombState();
     startContainer.hidden = true;
     quizScreen.hidden = false;
+    showLevel(levelnumber);
+});
+
+debugLevelForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    const requestedLevel = Number.parseInt(debugLevelInput.value, 10);
+
+    if (!Number.isInteger(requestedLevel) || requestedLevel < 1) {
+        debugLevelInput.focus();
+        return;
+    }
+
+    levelnumber = requestedLevel;
+    lives = 3;
+    hasShownFirstLevel = false;
+    bombCounter = 10;
+    resetBombState();
+    startContainer.hidden = true;
+    quizScreen.hidden = false;
+    gameOverScreen.hidden = true;
     showLevel(levelnumber);
 });
 
