@@ -410,7 +410,123 @@ const quizLevels = {
     },
     38: {
         question: "ERINNERE DICH AN WAS DU EINKAUFEN MUSST:",
+    },
+    39: {
+        question: "TRANSPORTMITTEL?",
+        answers: [
+            "DADDY",
+            "USA",
+            "TAX",
+            "USB"
+        ],
+        correctAnswer: 4
+    },
+    40: {
+        question: "SICHERLICH HAST DU GEMERKT IN WELCHEM LEVEL DU GERADE BIST",
+        answers: [
+            "38",
+            "40",
+            "39",
+            "41"
+        ],
+        correctAnswer: 2
+    },
+    41: {
+        question: "DU HAST 40€ IN DER EINEN HAND UND 20€ IN DER ANDEREN. WAS HAST DU?",
+        answers: [
+            "DEPRESSIONEN",
+            "60 EURO",
+            "AIDS",
+            "DEIN MONATLICHES EINKOMMEN"
+        ],
+        correctAnswer: 3
+    },
+    42: {
+        question: "WAS IST TAYLOR SWIFT?",
+        answers: [
+            "EXTREMS HÄSSLICH",
+            "EINE PLAYERIN",
+            "DIE BESTE MUSIKERIN JEMALS",
+            "RADIOAKTIV"
+        ],
+        correctAnswer: 4
+    },
+    43: {
+        question: "SHANGHAII?",
+        answers: [
+            "HAUPTSTADT CHINAS",
+            "EXISTIERT NICHT",
+            "WARUM IST DA EIN FRAGEZEICHEN?",
+            "20M ÜBER DEM MEERESSPIEGEL"
+        ],
+        correctAnswer: 2
+    },
+    44  : {
+        question: "WAS IST DAS?",
+        image: true,
+        answers: [
+            "EIN TEUFLISCHER KÄFER",
+            "INSEKTEN HALT",
+            "EKELHAFT",
+            "DIE AMEISEN IN MEINEM KELLER"
+        ],
+        correctAnswer: 2
+    },
+    45  : {
+        question: "WIE NENNT MAN RUNDE SÄUGETIERE?",
+        image: false,
+        answers: [
+            "FETTSÄCKE",
+            "BLOBS",
+            "OVALE",
+            "KAUTSCHUK"
+        ],
+        correctAnswer: 3
+    },
+    46  : {
+        question: "WOFÜR STEHT TAMS NAME?",
+        bomb: true,
+        answers: [
+            "HERZ & GEFÜHL",
+            "SCHWARZE SEELE",
+            "TAMAM TAMAM, VOR DER TÜR STEHEN ZEHNTAUSEND MANN",
+            "PREFIX VON PON"
+        ],
+        correctAnswer: 1
+    },
+    47  : {
+        question: "FÜNFHUNDERT PLUS ZEHN",
+        bomb: false,
+        answers: [
+            "XD",
+            "XP",
+            "DX",
+            "8D"
+        ],
+        correctAnswer: 3
+    },
+    48  : {
+        question: "MERKE DIR: ROT, BLAU, ROT, GELB",
+        answers: [
+            "O.K.",
+            "SIMON SAYS LOL",
+            "SKITTLES",
+            "NÖ"
+        ],
+        correctAnswer: 1
+    },
+    49  : {
+        question: "WAS IST CRICKET?",
+        answers: [
+            "SCHWULE TYPEN, DIE MIT BÄLLEN SPIELEN",
+            "INDIEN",
+            "BALLING",
+            "*STILLE*"
+        ],
+        correctAnswer: 4
     }
+
+
 
 };
 
@@ -639,7 +755,7 @@ function showLevel(level) {
     levelTransitionTimeout = null;
     stopImageAnimation();
 
-    levelNumberElement.textContent = level;
+    levelNumberElement.textContent = level === 40 ? "???" : level;
     if (!levelData || !levelData.bomb) {
         resetBombState();
     } else {
@@ -773,6 +889,21 @@ function showLevel(level) {
         answerButton.type = "button";
         answerButton.textContent = answer.trim() === "" ? "\u00a0" : answer;
         answerButton.addEventListener("click", function() {
+            if (level === 42 && index === 2) {
+                stopBombTimer();
+                playPistolShotSound();
+                bombCounter = 10;
+                if (bombStatus) {
+                    bombStatus.hidden = true;
+                }
+                updateBombDisplay();
+                lives = 0;
+                livesNumberElement.textContent = lives;
+                quizScreen.hidden = true;
+                gameOverScreen.hidden = false;
+                return;
+            }
+
             if (level === 37 && index === 2) {
                 stopBombTimer();
                 playPistolShotSound();
