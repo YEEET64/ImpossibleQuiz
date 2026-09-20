@@ -117,10 +117,14 @@ body {
     overflow-wrap: anywhere;
 }
 
+.question.level-21-question {
+    color: red;
+}
+
 .level-image {
     display: block;
     width: min(100%, 24rem, 28vh);
-    height: auto;
+    height: min(28vh, 24rem);
     box-sizing: border-box;
     margin: clamp(1rem, 3vw, 2rem) auto 0;
     object-fit: contain;
@@ -130,12 +134,34 @@ body {
     border: var(--quiz-border-width) solid black;
 }
 
+.level-image.animation-image {
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
 .answer-buttons {
     display: flex;
     flex-direction: column;
     gap: clamp(0.6rem, 2vw, 1.2rem);
     width: 100%;
     margin-top: clamp(1.5rem, 5vw, 3rem);
+}
+
+.level-27-button {
+    position: fixed;
+    z-index: 5;
+    left: 50%;
+    bottom: clamp(1rem, 4vw, 2rem);
+    width: clamp(2rem, 5vw, 3rem);
+    height: clamp(2rem, 5vw, 3rem);
+    padding: 0;
+    transform: translateX(-50%);
+    border: 0;
+    border-radius: 50%;
+    appearance: none;
+    background: white;
+    cursor: pointer;
+    touch-action: manipulation;
 }
 
 .answer-button {

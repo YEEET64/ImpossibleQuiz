@@ -17,6 +17,9 @@ let level12BlinkTimeout;
 let level12BlinkResetTimeout;
 let bombTimerId = null;
 let bombCounter = 10;
+let animationClickCount = 0;
+let animationImageHandler = null;
+let levelTransitionTimeout = null;
 
 const quizLevels = {
     1: {
@@ -185,6 +188,111 @@ const quizLevels = {
             "SKIP"
         ],
         correctAnswer: 4
+    },
+    17: {
+        question: "WAS IST DIE ERSTE REGEL?",
+        bomb: false,
+        answers: [
+            "KANN ICH NICHT SAGEN",
+            "AUGE FÜR AUGE, ZAHN FÜR ZAHN",
+            "IMMER BITTE UND DANKE SAGEN",
+            "DIE RECHTSFÄHIGKEIT DES MENSCHEN BEGINNT BEI DER GEBURT"
+        ],
+        correctAnswer: 1
+    },
+    18: {
+        question: "WER IST DAS?",
+        image: true,
+        imageBorder: true,
+        answers: [
+            "EINE GANZ NORMALE PERSON",
+            "EIN LINKEDIN-PROFIL",
+            "EIN KRIEGSVERBRECHER",
+            "EIN DELEGIERTER"
+        ],
+        correctAnswer: 3
+    },
+    19: {
+        question: "WAS DAVON IST KEINE DEUTSCHE STADT?",
+        image: false,
+        imageBorder: false,
+        answers: [
+            "GEILENKIRCHEN",
+            "ARSCHLOCHWINKEL",
+            "WIXHAUSEN",
+            "BERLIN"
+        ],
+        correctAnswer: 2
+    },
+    20: {
+        question: "BENCHE 60!",
+        image: true,
+        imageBorder: false,
+        animation: true,
+        bomb: true,
+    },
+    21: {
+        question: "WAS IST DIE BESTE STAATSFORM?",
+        image: false,
+        imageBorder: false,
+        answers: [
+            "DEMOKRATIE",
+            "DIKTATUR",
+            "ARISTOKRATIE",
+            "MONARCHIE"
+        ],
+        correctAnswer: 2
+    },
+    22: {
+        question: "WAS IST DIE WURZEL ALLES BÖSENS?",
+        answers: [
+            "ZWIEBEL",
+            "SATAN",
+            "MEINE SCHWESTER",
+            "25,81"
+        ],
+        correctAnswer: 4
+    },
+    23: {
+        question: "LADE DIE SEITE NEU!",
+        bomb: true,
+    },
+    24: {
+        question: "WAS IST DAS?",
+        image: true,
+        imageBorder: false,
+        answers: [
+            "EFFEKTE VON PESTIZIDE",
+            "EINE BAND",
+            "DIE PFEFFERKÖRNER IN DEN MID 20s",
+            "MEINE ERBSEN IM TIEFKÜHLSCHRANK"
+        ],
+        correctAnswer: 2
+    },
+    25: {
+        question: "WIE BEKOMMT MAN DEN DEUTSCHEN PASS?",
+        image: false,
+        answers: [
+            "DURCH MUTTI MERKEL",
+            "EINE DEUTSCHE FRAU HEIRATEN",
+            "PER FAX ANFRAGEN",
+            "BLAUE AUGEN UND BLONDE HAARE HABEN"
+        ],
+        correctAnswer: 1
+    },
+    26: {
+        question: "WAS PASSIERT SOBALD MAN 20 IST?",
+        answers: [
+            "KRUMMER RÜCKEN GARANTIERT",
+            "KEINEN LEBENSWILLEN MEHR HABEN",
+            "UNC",
+            "ALL OF THE ABOVE"
+        ],
+        correctAnswer: 4
+    },
+    27: {
+        question: "FINDE!",
+        bomb: true,
     }
 
 };
@@ -246,11 +354,60 @@ function startBombLevel(levelData) {
     }, 1000);
 }
 
+function completeAnimationLevel() {
+    stopBombTimer();
+    bombCounter = 10;
+    if (bombStatus) {
+        bombStatus.hidden = true;
+    }
+    updateBombDisplay();
+    levelnumber += 1;
+    levelNumberElement.textContent = levelnumber;
+    questionElement.textContent = "";
+    levelImage.hidden = true;
+    answerButtons.replaceChildren();
+    answerFeedback.textContent = "";
+
+    levelTransitionTimeout = setTimeout(function() {
+        levelTransitionTimeout = null;
+        showLevel(levelnumber);
+    }, 1000);
+}
+
+function stopImageAnimation() {
+    if (animationImageHandler !== null) {
+        levelImage.removeEventListener("click", animationImageHandler);
+        animationImageHandler = null;
+    }
+}
+
+function setupImageAnimation(level) {
+    animationClickCount = 0;
+    animationImageHandler = function() {
+        animationClickCount += 1;
+
+        if (animationClickCount === 60) {
+            stopImageAnimation();
+            completeAnimationLevel();
+            return;
+        }
+
+        if (animationClickCount % 10 === 0) {
+            const nextImageNumber = animationClickCount / 10 + 1;
+            levelImage.src = `sonstiges/Bilder/Level ${level}/Unbenanntes_Projekt (${nextImageNumber}).png`;
+        }
+    };
+    levelImage.addEventListener("click", animationImageHandler);
+}
+
 function showLevel(level) {
     const levelData = quizLevels[level];
 
     clearTimeout(level12BlinkTimeout);
     clearTimeout(level12BlinkResetTimeout);
+    clearTimeout(levelTransitionTimeout);
+    levelTransitionTimeout = null;
+    stopImageAnimation();
 
     levelNumberElement.textContent = level;
     if (!levelData || !levelData.bomb) {
@@ -260,20 +417,89 @@ function showLevel(level) {
     }
     answerFeedback.textContent = "";
     levelStatus.classList.toggle("is-clickable", level === 4);
+    questionElement.classList.toggle("level-21-question", level === 21);
 
     if (!levelData) {
         questionElement.textContent = "DIESES LEVEL KOMMT BALD";
         answerButtons.replaceChildren();
+
+        if (level === 23) {
+            levelTransitionTimeout = setTimeout(function() {
+                levelTransitionTimeout = null;
+                const noButton = document.createElement("button");
+
+                noButton.className = "answer-button";
+                noButton.type = "button";
+                noButton.textContent = "NÖ";
+                noButton.addEventListener("click", function() {
+                    levelnumber = 24;
+                    showLevel(levelnumber);
+                });
+                answerButtons.appendChild(noButton);
+            }, 5000);
+        }
+
         return;
     }
 
     questionElement.textContent = levelData.question;
+
+    if (level === 23) {
+        levelImage.hidden = true;
+        answerButtons.replaceChildren();
+        levelTransitionTimeout = setTimeout(function() {
+            levelTransitionTimeout = null;
+            const noButton = document.createElement("button");
+
+            noButton.className = "answer-button";
+            noButton.type = "button";
+            noButton.textContent = "NÖ";
+            noButton.addEventListener("click", function() {
+                levelnumber = 24;
+                showLevel(levelnumber);
+            });
+            answerButtons.appendChild(noButton);
+        }, 5000);
+        return;
+    }
+
+    if (level === 27) {
+        levelImage.hidden = true;
+        answerButtons.replaceChildren();
+
+        const nextLevelButton = document.createElement("button");
+        nextLevelButton.className = "level-27-button";
+        nextLevelButton.type = "button";
+        nextLevelButton.setAttribute("aria-label", "Weiter zu Level 28");
+        nextLevelButton.addEventListener("click", function() {
+            stopBombTimer();
+            bombCounter = 10;
+            if (bombStatus) {
+                bombStatus.hidden = true;
+            }
+            updateBombDisplay();
+            levelnumber = 28;
+            showLevel(levelnumber);
+        });
+        answerButtons.appendChild(nextLevelButton);
+        return;
+    }
+
     levelImage.hidden = !levelData.image;
     levelImage.classList.toggle("has-border", levelData.imageBorder === true);
+    levelImage.classList.toggle("animation-image", levelData.animation === true);
+    levelImage.alt = "";
     levelImage.src = levelData.image
-        ? `sonstiges/Bilder/Bild${level}.png`
+        ? levelData.animation
+            ? `sonstiges/Bilder/Level ${level}/Unbenanntes_Projekt (1).png`
+            : `sonstiges/Bilder/Bild${level}.png`
         : "";
     answerButtons.replaceChildren();
+
+    if (levelData.animation) {
+        setupImageAnimation(level);
+        return;
+    }
 
     levelData.answers.forEach(function(answer, index) {
         const answerButton = document.createElement("button");
@@ -325,7 +551,18 @@ function showLevel(level) {
                 }
 
                 levelnumber += 1;
-                showLevel(levelnumber);
+                if (level === 21) {
+                    answerFeedback.textContent = "GUTE ANTWORT GENOSSE";
+                    answerButtons.querySelectorAll("button").forEach(function(button) {
+                        button.disabled = true;
+                    });
+                    levelTransitionTimeout = setTimeout(function() {
+                        levelTransitionTimeout = null;
+                        showLevel(levelnumber);
+                    }, 1000);
+                } else {
+                    showLevel(levelnumber);
+                }
             } else {
                 lives -= 1;
                 livesNumberElement.textContent = lives;
