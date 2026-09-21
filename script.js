@@ -619,7 +619,38 @@ const quizLevels = {
             "DIE CHAUSEESTRAßE KAUFEN"
         ],
         correctAnswer: 4
+    },
+    61  : {
+        question: "WARUM HAT DER SENSENMANN EINE SENSE?",
+        answers: [
+            "BESSER ALS SEINE OPFER ANZUFASSEN",
+            "WARUM HAST DU EINEN P****?",
+            "UM AURA ZU FARMEN",
+            "SONST WÄRE ER NUR EIN MANN"
+        ],
+        correctAnswer: 3
+    },
+    62  : {
+        question: "WARUM?",
+        answers: [
+            "AURA FARMEN",
+            "WARUM NICHT?",
+            "WARUM SCHON?",
+            "GEHÖRT ES NOCH ZU DER ANDEREN FRAGE?"
+        ],
+        correctAnswer: 1
+    },
+    63  : {
+        question: "WAS DAVON IST HALAL?",
+        answers: [
+            "BUGS BUNNY",
+            "EINE GEILE SCHWEINSHAXE",
+            "NEN GIN TONIC",
+            "EINE LIDL-LASAGNE"
+        ],
+        correctAnswer: 1
     }
+
 
 
 
