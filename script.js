@@ -553,7 +553,18 @@ const quizLevels = {
             "EIN GEMISCH AUS 31 STEINSORTEN"
         ],
         correctAnswer: 3
+    },
+    54  : {
+        question: "この質問は日本語です.",
+        answers: [
+            "それは質問ではありません",
+            "私は日本が嫌いだ",
+            "かわいいーーーーー",
+            "私はバカだ"
+        ],
+        correctAnswer: 1
     }
+
 
 
 
