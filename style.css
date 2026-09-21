@@ -24,6 +24,19 @@ body {
 
 body.level-52 {
     background-color: black;
+    scrollbar-width: none;
+}
+
+body.level-52::-webkit-scrollbar {
+    display: none;
+}
+
+html.level-52 {
+    scrollbar-width: none;
+}
+
+html.level-52::-webkit-scrollbar {
+    display: none;
 }
 
 .start-container {
@@ -155,7 +168,7 @@ body.level-52 .question {
 }
 
 .level-52-question-area .answer-buttons {
-    min-height: 180rem;
+    min-height: 1800rem;
     justify-content: flex-end;
 }
 

@@ -852,7 +852,7 @@ function showLevel(level) {
     stopImageAnimation();
 
     levelNumberElement.textContent = level === 40 ? "???" : level;
-    if (!levelData || !levelData.bomb || level === 52) {
+    if (!levelData || !levelData.bomb) {
         resetBombState();
     } else {
         startBombLevel(levelData);
@@ -861,6 +861,7 @@ function showLevel(level) {
     levelStatus.classList.toggle("is-clickable", level === 4);
     questionElement.classList.toggle("level-21-question", level === 21);
     document.body.classList.toggle("level-52", level === 52);
+    document.documentElement.classList.toggle("level-52", level === 52);
     questionArea.classList.toggle("level-52-question-area", level === 52);
 
     if (!levelData) {
