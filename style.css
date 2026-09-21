@@ -199,6 +199,11 @@ body.level-52 .question {
     height: min(56vh, 48rem);
 }
 
+.level-image.level-20-image {
+    width: min(100%, 36rem, 42vh);
+    height: min(42vh, 36rem);
+}
+
 .level-image.has-border {
     border: var(--quiz-border-width) solid black;
 }

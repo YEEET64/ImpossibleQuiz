@@ -578,6 +578,7 @@ const quizLevels = {
     },
     56  : {
         question: "AAAAAAAHHHHHHH!!! DIEE SCHMERRZZEEENN!!!",
+        bomb: true,
         answers: [
             "H2O2",
             "C2H5OH",
@@ -608,6 +609,16 @@ const quizLevels = {
     },
     59  : {
         question: "",
+    },
+    60  : {
+        question: "DU WÜRFELST EINE 6. WAS MACHST DU?",
+        answers: [
+            "ICH DARF EIN HAUFEN AUF DAS BRETT LEGEN",
+            "YAHTZEEE!!!",
+            "ICH STEHLE EIN SCHAF VON MEINEM MITSPIELER",
+            "DIE CHAUSEESTRAßE KAUFEN"
+        ],
+        correctAnswer: 4
     }
 
 
@@ -988,6 +999,7 @@ function showLevel(level) {
     questionArea.classList.toggle("level-52-question-area", level === 52);
     document.body.classList.toggle("level-58", level === 58);
     levelImage.classList.toggle("level-59-image", level === 59);
+    levelImage.classList.toggle("level-20-image", level === 20);
     questionElement.hidden = false;
 
     if (level === 58) {
