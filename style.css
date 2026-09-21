@@ -22,6 +22,10 @@ body {
     align-items: center;
 }
 
+body.level-52 {
+    background-color: black;
+}
+
 .start-container {
     display: flex;
     flex-direction: column;
@@ -144,6 +148,15 @@ body {
 
 .question.level-21-question {
     color: red;
+}
+
+body.level-52 .question {
+    color: white;
+}
+
+.level-52-question-area .answer-buttons {
+    min-height: 180rem;
+    justify-content: flex-end;
 }
 
 .question-word-button {
@@ -301,6 +314,22 @@ body {
     background: white;
     cursor: pointer;
     touch-action: manipulation;
+}
+
+.level-52-switch-button {
+    align-self: center;
+    width: min(12rem, 45vw);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.level-52-switch-button img {
+    display: block;
+    width: 100%;
+    height: auto;
 }
 
 .answer-button {

@@ -3,6 +3,7 @@ const startContainer = document.querySelector(".start-container");
 const quizScreen = document.getElementById("quizScreen");
 const gameOverScreen = document.getElementById("gameOverScreen");
 const questionElement = document.getElementById("question");
+const questionArea = document.querySelector(".question-area");
 const levelImage = document.getElementById("levelImage");
 const answerButtons = document.getElementById("answerButtons");
 const answerFeedback = document.getElementById("answerFeedback");
@@ -540,15 +541,20 @@ const quizLevels = {
         correctAnswer: 3
     },
     52  : {
-        question: "KANN ANTON BOXEN?",
+        question: "LICHT?",
+        bomb: true
+    },
+    53  : {
+        question: "WAS SIND DIE HAUPTBESTANDTEILE VON SHAMPOO?",
         answers: [
-            "AUF JEDEN FALL",
-            "MIT MÜHE VIELLEICHT",
-            "NEIN, ABER JACK KANN",
-            "MIKE TYSON"
+            "FEENSTAUB UND MAYONNAISE",
+            "KOFFEIN UND MELATONIN",
+            "GESCHLECHTSORGANE UND MENSCHLICHER KOT",
+            "EIN GEMISCH AUS 31 STEINSORTEN"
         ],
         correctAnswer: 3
     }
+
 
 
 
@@ -812,6 +818,24 @@ function setupLevel50Images() {
     answerButtons.appendChild(imageStack);
 }
 
+function setupLevel52Switch() {
+    const switchButton = document.createElement("button");
+    const switchImage = document.createElement("img");
+
+    switchButton.className = "level-52-switch-button";
+    switchButton.type = "button";
+    switchButton.setAttribute("aria-label", "Lichtschalter für Level 53");
+    switchImage.src = "sonstiges/Bilder/Bild52.png";
+    switchImage.alt = "Lichtschalter";
+    switchButton.appendChild(switchImage);
+    switchButton.addEventListener("click", function() {
+        levelnumber += 1;
+        showLevel(levelnumber);
+    });
+
+    answerButtons.appendChild(switchButton);
+}
+
 function showLevel(level) {
     const levelData = quizLevels[level];
 
@@ -828,7 +852,7 @@ function showLevel(level) {
     stopImageAnimation();
 
     levelNumberElement.textContent = level === 40 ? "???" : level;
-    if (!levelData || !levelData.bomb) {
+    if (!levelData || !levelData.bomb || level === 52) {
         resetBombState();
     } else {
         startBombLevel(levelData);
@@ -836,6 +860,8 @@ function showLevel(level) {
     answerFeedback.textContent = "";
     levelStatus.classList.toggle("is-clickable", level === 4);
     questionElement.classList.toggle("level-21-question", level === 21);
+    document.body.classList.toggle("level-52", level === 52);
+    questionArea.classList.toggle("level-52-question-area", level === 52);
 
     if (!levelData) {
         questionElement.textContent = "DIESES LEVEL KOMMT BALD";
@@ -900,6 +926,13 @@ function showLevel(level) {
             levelImage.hidden = true;
             answerButtons.replaceChildren();
             setupLevel50Images();
+            return;
+        }
+
+        if (level === 52) {
+            levelImage.hidden = true;
+            answerButtons.replaceChildren();
+            setupLevel52Switch();
             return;
         }
     }
