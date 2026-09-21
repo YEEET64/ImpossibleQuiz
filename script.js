@@ -28,6 +28,8 @@ let animationClickCount = 0;
 let animationImageHandler = null;
 let levelTransitionTimeout = null;
 let hasShownFirstLevel = false;
+let level58SecondAnswerClicks = 0;
+let level59Timeout = null;
 
 function playPistolShotSound() {
     pistolShotSound.currentTime = 0;
@@ -563,7 +565,51 @@ const quizLevels = {
             "私はバカだ"
         ],
         correctAnswer: 1
+    },
+    55  : {
+        question: "WIE VIELE BITS SIND IN EINEM BYTE?",
+        answers: [
+            "NERD",
+            "4 GB",
+            "JE NACHDEM WIE GROß DEIN MAUL IST",
+            "128"
+        ],
+        correctAnswer: 3
+    },
+    56  : {
+        question: "AAAAAAAHHHHHHH!!! DIEE SCHMERRZZEEENN!!!",
+        answers: [
+            "H2O2",
+            "C2H5OH",
+            "CH3COOH",
+            "NaCl"
+        ],
+        correctAnswer: 2
+    },
+    57  : {
+        question: "WIE LANGE BRAUCHST DU UM EIN HARTES EI ZU KOCHEN?",
+        answers: [
+            "5 MINUTEN",
+            "KOMMT AUF MEIN BAUCHGEFÜHL AN",
+            "12 MINUTEN",
+            "HEHE EIER..."
+        ],
+        correctAnswer: 1
+    },
+    58  : {
+        question: "WIE KOMMT MAN AUS DEN BACKROOMS RAUS?",
+        answers: [
+            "DURCH BACKSHOTS",
+            "ES GIBT KEIN ENTKOMMEN",
+            "ALT + F4",
+            "ICH GLITCHE MICH DURCH EIN SPALT DURCH"
+        ],
+        correctAnswer: 2
+    },
+    59  : {
+        question: "",
     }
+
 
 
 
@@ -654,6 +700,71 @@ function stopImageAnimation() {
         levelImage.removeEventListener("click", animationImageHandler);
         animationImageHandler = null;
     }
+}
+
+function stopLevel59Animation() {
+    if (level59Timeout !== null) {
+        clearTimeout(level59Timeout);
+        level59Timeout = null;
+    }
+}
+
+function loseLevel59Life() {
+    stopLevel59Animation();
+    playPistolShotSound();
+    lives -= 1;
+    livesNumberElement.textContent = lives;
+
+    if (lives === 0) {
+        quizScreen.hidden = true;
+        gameOverScreen.hidden = false;
+        return;
+    }
+
+    setupLevel59Animation();
+}
+
+function setupLevel59Animation() {
+    let phase = 1;
+    const continueButton = document.createElement("button");
+
+    stopLevel59Animation();
+    levelImage.src = "sonstiges/Bilder/Level 59/Unbenanntes_Projekt (1).png";
+    answerButtons.replaceChildren();
+
+    continueButton.className = "answer-button";
+    continueButton.type = "button";
+    continueButton.textContent = "WEITER";
+    continueButton.addEventListener("click", function() {
+        if (phase === 3 || phase === 4) {
+            stopLevel59Animation();
+            levelnumber += 1;
+            showLevel(levelnumber);
+            return;
+        }
+
+        loseLevel59Life();
+    });
+    answerButtons.appendChild(continueButton);
+
+    level59Timeout = setTimeout(function() {
+        phase = 2;
+        levelImage.src = "sonstiges/Bilder/Level 59/Unbenanntes_Projekt (2).png";
+
+        level59Timeout = setTimeout(function() {
+            phase = 3;
+            levelImage.src = "sonstiges/Bilder/Level 59/Unbenanntes_Projekt (3).png";
+
+            level59Timeout = setTimeout(function() {
+                phase = 4;
+                levelImage.src = "sonstiges/Bilder/Level 59/Unbenanntes_Projekt (1).png";
+
+                level59Timeout = setTimeout(function() {
+                    loseLevel59Life();
+                }, 500);
+            }, 350);
+        }, 1000);
+    }, 5000);
 }
 
 function setupImageAnimation(level) {
@@ -861,6 +972,7 @@ function showLevel(level) {
     clearTimeout(levelTransitionTimeout);
     levelTransitionTimeout = null;
     stopImageAnimation();
+    stopLevel59Animation();
 
     levelNumberElement.textContent = level === 40 ? "???" : level;
     if (!levelData || !levelData.bomb) {
@@ -874,6 +986,13 @@ function showLevel(level) {
     document.body.classList.toggle("level-52", level === 52);
     document.documentElement.classList.toggle("level-52", level === 52);
     questionArea.classList.toggle("level-52-question-area", level === 52);
+    document.body.classList.toggle("level-58", level === 58);
+    levelImage.classList.toggle("level-59-image", level === 59);
+    questionElement.hidden = false;
+
+    if (level === 58) {
+        level58SecondAnswerClicks = 0;
+    }
 
     if (!levelData) {
         questionElement.textContent = "DIESES LEVEL KOMMT BALD";
@@ -899,6 +1018,17 @@ function showLevel(level) {
             }, 5000);
         }
 
+        return;
+    }
+
+    if (level === 59) {
+        questionElement.hidden = true;
+        levelImage.hidden = false;
+        levelImage.classList.remove("has-border");
+        levelImage.classList.remove("animation-image");
+        levelImage.alt = "Ampel für Level 59";
+        answerButtons.replaceChildren();
+        setupLevel59Animation();
         return;
     }
 
@@ -1013,6 +1143,36 @@ function showLevel(level) {
         answerButton.type = "button";
         answerButton.textContent = answer.trim() === "" ? "\u00a0" : answer;
         answerButton.addEventListener("click", function() {
+            if (level === 58) {
+                if (index === 1) {
+                    if (level58SecondAnswerClicks >= 20) {
+                        window.location.reload();
+                        return;
+                    }
+
+                    playDingSound();
+                    level58SecondAnswerClicks += 1;
+
+                    if (level58SecondAnswerClicks === 20) {
+                        answerButtons.children[1].textContent = levelData.answers[2];
+                        answerButtons.children[2].textContent = "ES GIBT EIN ENTKOMMEN";
+                    }
+
+                    return;
+                }
+
+                if (index === 2) {
+                    if (level58SecondAnswerClicks < 20) {
+                        window.location.reload();
+                    } else {
+                        levelnumber += 1;
+                        showLevel(levelnumber);
+                    }
+
+                    return;
+                }
+            }
+
             if (level === 42 && index === 2) {
                 stopBombTimer();
                 playPistolShotSound();

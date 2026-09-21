@@ -27,6 +27,10 @@ body.level-52 {
     scrollbar-width: none;
 }
 
+body.level-58 {
+    background-color: #ecd485;
+}
+
 body.level-52::-webkit-scrollbar {
     display: none;
 }
@@ -188,6 +192,11 @@ body.level-52 .question {
     box-sizing: border-box;
     margin: clamp(1rem, 3vw, 2rem) auto 0;
     object-fit: contain;
+}
+
+.level-image.level-59-image {
+    width: min(100%, 48rem, 56vh);
+    height: min(56vh, 48rem);
 }
 
 .level-image.has-border {
