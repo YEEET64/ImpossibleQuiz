@@ -624,7 +624,7 @@ const quizLevels = {
         question: "WARUM HAT DER SENSENMANN EINE SENSE?",
         answers: [
             "BESSER ALS SEINE OPFER ANZUFASSEN",
-            "WARUM HAST DU EINEN P****?",
+            "UND WARUM HAST DU EINEN P****?",
             "UM AURA ZU FARMEN",
             "SONST WÄRE ER NUR EIN MANN"
         ],
@@ -658,7 +658,7 @@ const quizLevels = {
             "4",
             "88"
         ],
-        correctAnswer: 2
+        correctAnswer: 3
     },
     65  : {
         question: "BIN ICH REAL?",
@@ -687,7 +687,7 @@ const quizLevels = {
         answers: [
             "TUNGSTEN CUBE",
             "LEGO-SETS",
-            "WERTSCHÄTZIGKEIT (SOWIE ALLE ANDEREN SACHEN)",
+            "WERTSCHÄTZUNG (SOWIE ALLE ANDEREN SACHEN)",
             "JEAN PAUL GAULTIER"
         ],
         correctAnswer: 3
@@ -717,7 +717,70 @@ const quizLevels = {
             "AKAZIEN HOLZ"
         ],
         correctAnswer: 4
+    },
+    71  : {
+        question: "WARUM SAUGT DRACULA BLUT?",
+        answers: [
+            "BESSER ALS SPERMA",
+            "ER IST VEGETARIER",
+            "ER HAT EINEN KINK",
+            "WEGEN EISENMANGEL"
+        ],
+        correctAnswer: 4
+    },
+    72: {
+        question: "WOFÜR STEHT LRS?",
+        answers: [
+            "LECKERE RINDSCHWEINE",
+            "RECHTS-LINKS-SCHWÄCHE",
+            "LANDESRECHNUNGSHOF",
+            "LESE-RECHTSCHREIB-STÖRUNG"
+        ],
+        correctAnswer: 2
+    },
+    73: {
+        question: "WER IST DAS?",
+        image:true,
+        answers: [
+            "ASUKA LANGLEY",
+            "ZIVILIST NR. 1.002.332",
+            "KIKI",
+            "OH Nein... MEIN SCHWIEGERVATER..."
+        ],
+        correctAnswer: 3
+    },
+    74: {
+        question: "WAS IST EIGENTLICH MIT ASH KETCHUM PASSIERT?",
+        answers: [
+            "WER IST DAS?",
+            "PIKACHU! ZAHL MEINE STEUERN!",
+            "ER HAT SEINEN MASTER",
+            "KETCHUP"
+        ],
+        correctAnswer: 3
+    },
+    75: {
+        question: "WAS DAVON IST KEIN STUDIENGANG?",
+        answers: [
+            "ANGEWANDTE FREIZEITWISSENSCHAFTEN",
+            "PUPPENSPIEL :)",
+            "VEGAN FOOD MAMNAGEMENT",
+            "SOCIAL ENGINEERING"
+        ],
+        correctAnswer: 4
+    },
+    76: {
+        question: "WAS UNTERSCHEIDET EIN MENSCH VON EINEM ROBOTER?",
+        answers: [
+            "SIE KÖNNEN SINFONIEN SCHREIBEN",
+            "SIE KÖNNEN SICH MIT JOGHURT EINSCHMIEREN",
+            "SIE TRÄUMEN",
+            "SIE KÖNNEN MALEN"
+        ],
+        correctAnswer: 2
     }
+
+
 
 
 
