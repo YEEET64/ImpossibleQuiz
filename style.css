@@ -326,6 +326,46 @@ body.level-52 .question {
     margin: 0 auto;
 }
 
+.level-69-board {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.5rem, 3vw, 2rem);
+    align-items: end;
+    width: 100%;
+    margin-top: clamp(1rem, 4vw, 2rem);
+}
+
+.level-69-tower {
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.level-69-tower img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.level-69-tower.is-selected {
+    outline: var(--quiz-border-width) solid red;
+    outline-offset: 0.25rem;
+}
+
+.level-69-selected-ring {
+    position: absolute;
+    top: 0;
+    width: min(28%, 8rem);
+    height: auto;
+    transform: translateY(-70%);
+    pointer-events: none;
+}
+
 .level-27-button {
     position: fixed;
     z-index: 5;

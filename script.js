@@ -649,6 +649,74 @@ const quizLevels = {
             "EINE LIDL-LASAGNE"
         ],
         correctAnswer: 1
+    },
+    64  : {
+        question: "WIE VIELE BUCHSTABEN IN DIESEM SATZ?",
+        answers: [
+            "30",
+            "31",
+            "4",
+            "88"
+        ],
+        correctAnswer: 2
+    },
+    65  : {
+        question: "BIN ICH REAL?",
+        answers: [
+            "ICH DENKE",
+            "THE ONE PIECE!!!!!!",
+            "ICH GLAUBE",
+            "NEIN, ICH BIN KUCHEN"
+        ],
+        correctAnswer: 1
+    },
+    66  : {
+        question: "WAS IST DAS HIER?",
+        image: true,
+        answers: [
+            "BRO, ICH WEIß ES AUCH NICHT MAN",
+            "EIN BAGGER",
+            "POLNISCHE FREIZEITAKTIVITÄTEN",
+            "Ü50 WELTMEISTERSCHAFTEN"
+        ],
+        correctAnswer: 2
+    },
+    67  : {
+        question: "WAS IST ES WAS JUNGS WIRKLICH WOLLEN?",
+        image: false,
+        answers: [
+            "TUNGSTEN CUBE",
+            "LEGO-SETS",
+            "WERTSCHÄTZIGKEIT (SOWIE ALLE ANDEREN SACHEN)",
+            "JEAN PAUL GAULTIER"
+        ],
+        correctAnswer: 3
+    },
+    68  : {
+        question: "WAS DAVON WURDE NOCH NICHT IN DIE LUFT GESPRENGT?",
+        bomb: true,
+        answers: [
+            "DIE TWIN TOWERS",
+            "SPRINGFIELD",
+            "TÜRME VON HANOI",
+            "NIKI LAUDA"
+        ],
+        correctAnswer: 3
+    },
+    69  : {
+        question: "LÖSE:",
+        bomb: true
+    },
+    70  : {
+        question: "WAS IST WIRKLICH WIRKLICH HÄSSLICH?",
+        bomb: false,
+        answers: [
+            "DU",
+            "BELLA RAMSEY",
+            "ANDROID",
+            "AKAZIEN HOLZ"
+        ],
+        correctAnswer: 4
     }
 
 
@@ -982,6 +1050,130 @@ function setupLevel50Images() {
     answerButtons.appendChild(imageStack);
 }
 
+function setupLevel69Hanoi() {
+    const towers = [[1, 2, 3], [], []];
+    const towerButtons = [];
+    let selectedTower = null;
+    let selectedRing = null;
+    const board = document.createElement("div");
+    const selectedRingImage = document.createElement("img");
+
+    board.className = "level-69-board";
+    selectedRingImage.className = "level-69-selected-ring";
+    selectedRingImage.alt = "Ausgewählter Ring";
+    selectedRingImage.hidden = true;
+
+    function getTowerImage(towerIndex) {
+        const towerState = towers[towerIndex].slice().sort(function(firstRing, secondRing) {
+            return firstRing - secondRing;
+        }).join(",");
+        const stateImageNumbers = {
+            "": 0,
+            "1": 1,
+            "1,2": 2,
+            "1,2,3": 3,
+            "2": 4,
+            "2,3": 5,
+            "3": 6,
+            "1,3": 7
+        };
+        const imageNumber = stateImageNumbers[towerState];
+        const fileName = towerIndex === 2
+            ? imageNumber === 3
+                ? "Znbenanntes_Projekt (3).png"
+                : `ZUnbenanntes_Projekt (${imageNumber}).png`
+            : `Unbenanntes_Projekt (${imageNumber}).png`;
+
+        return `sonstiges/Bilder/Level 69/${fileName}`;
+    }
+
+    function renderTowers() {
+        towerButtons.forEach(function(towerButton, towerIndex) {
+            const image = towerButton.querySelector("img");
+            image.src = getTowerImage(towerIndex);
+            image.alt = `Hanoi-Reihe ${towerIndex + 1} mit ${towers[towerIndex].length} Ringen`;
+            towerButton.classList.toggle("is-selected", towerIndex === selectedTower);
+        });
+
+        selectedRingImage.hidden = selectedRing === null;
+        if (selectedRing !== null) {
+            selectedRingImage.src = `sonstiges/Bilder/Level 69/Ring${selectedRing}.png`;
+            selectedRingImage.style.left = `${towerButtons[selectedTower].offsetLeft}px`;
+            selectedRingImage.style.width = `${towerButtons[selectedTower].offsetWidth}px`;
+        }
+    }
+
+    function loseHanoiLife() {
+        playPistolShotSound();
+        lives -= 1;
+        livesNumberElement.textContent = lives;
+
+        if (lives === 0) {
+            quizScreen.hidden = true;
+            gameOverScreen.hidden = false;
+        }
+    }
+
+    function chooseTower(towerIndex) {
+        const tower = towers[towerIndex];
+
+        if (selectedRing === null) {
+            if (tower.length === 0) {
+                return;
+            }
+
+            selectedTower = towerIndex;
+            selectedRing = tower.pop();
+            renderTowers();
+            return;
+        }
+
+        if (towerIndex === selectedTower) {
+            towers[selectedTower].push(selectedRing);
+            selectedTower = null;
+            selectedRing = null;
+            renderTowers();
+            return;
+        }
+
+        const topRing = tower[tower.length - 1];
+        if (topRing !== undefined && topRing > selectedRing) {
+            loseHanoiLife();
+            return;
+        }
+
+        tower.push(selectedRing);
+        selectedTower = null;
+        selectedRing = null;
+        renderTowers();
+
+        if (towers[2].length === 3) {
+            levelnumber += 1;
+            showLevel(levelnumber);
+        }
+    }
+
+    [0, 1, 2].forEach(function(towerIndex) {
+        const towerButton = document.createElement("button");
+        const towerImage = document.createElement("img");
+
+        towerButton.className = "level-69-tower";
+        towerButton.type = "button";
+        towerButton.setAttribute("aria-label", `Hanoi-Reihe ${towerIndex + 1}`);
+        towerImage.alt = "";
+        towerButton.appendChild(towerImage);
+        towerButton.addEventListener("click", function() {
+            chooseTower(towerIndex);
+        });
+        towerButtons.push(towerButton);
+        board.appendChild(towerButton);
+    });
+
+    board.appendChild(selectedRingImage);
+    answerButtons.appendChild(board);
+    renderTowers();
+}
+
 function setupLevel52Switch() {
     const switchButton = document.createElement("button");
     const switchImage = document.createElement("img");
@@ -1072,6 +1264,14 @@ function showLevel(level) {
         levelImage.alt = "Ampel für Level 59";
         answerButtons.replaceChildren();
         setupLevel59Animation();
+        return;
+    }
+
+    if (level === 69) {
+        questionElement.textContent = levelData.question;
+        levelImage.hidden = true;
+        answerButtons.replaceChildren();
+        setupLevel69Hanoi();
         return;
     }
 
