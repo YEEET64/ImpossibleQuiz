@@ -31,6 +31,10 @@ body.level-58 {
     background-color: #ecd485;
 }
 
+body.level-91 {
+    background-color: black;
+}
+
 body.level-52::-webkit-scrollbar {
     display: none;
 }
@@ -165,6 +169,15 @@ html.level-52::-webkit-scrollbar {
 
 .question.level-21-question {
     color: red;
+}
+
+body.level-91 .question {
+    color: white;
+}
+
+.question.level-90-transition-text {
+    color: white;
+    font-size: clamp(2rem, 7vw, 5rem);
 }
 
 body.level-52 .question {
@@ -511,4 +524,10 @@ body.level-52 .question {
     font-size: clamp(1.25rem, 4vw, 2.5rem);
     line-height: 1.5;
     overflow-wrap: anywhere;
+}
+
+.level-image.level-90-transition-number {
+    width: min(80vw, 32rem);
+    height: min(60vh, 24rem);
+    margin-top: 0;
 }

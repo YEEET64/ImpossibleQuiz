@@ -10,6 +10,7 @@ const answerFeedback = document.getElementById("answerFeedback");
 const levelStatus = document.getElementById("levelStatus");
 const levelNumberElement = document.getElementById("levelNumber");
 const livesNumberElement = document.getElementById("livesNumber");
+const livesWrapper = document.querySelector(".lives-wrapper");
 const bombStatus = document.getElementById("bombStatus");
 const bombImage = document.getElementById("bombImage");
 const debugLevelForm = document.getElementById("debugLevelForm");
@@ -18,7 +19,13 @@ const pistolShotSound = new Audio("sonstiges/Sounds/PistolShot.wav");
 pistolShotSound.volume = 0.5;
 const dingSound = new Audio("sonstiges/Sounds/DingSound.mp3");
 dingSound.volume = 0.5;
+const alarmSound = new Audio("sonstiges/Sounds/Alarm.mp3");
 const woofSound = new Audio("sonstiges/Sounds/Woof.mp3");
+const rockySound = new Audio("sonstiges/Sounds/Rocky.mp3");
+rockySound.volume = 0.8;
+rockySound.loop = true;
+const bomb10Sound = new Audio("sonstiges/Sounds/Bombe10.mp3");
+const bomb5Sound = new Audio("sonstiges/Sounds/Bombe5.mp3");
 let levelnumber = 0;
 let lives = 3;
 let level12BlinkTimeout;
@@ -46,6 +53,18 @@ function playDingSound() {
     dingSound.currentTime = 0;
     dingSound.play().catch(function() {});
 }
+
+function stopRockySound() {
+    rockySound.pause();
+    rockySound.currentTime = 0;
+}
+
+const gameOverObserver = new MutationObserver(function() {
+    if (!gameOverScreen.hidden) {
+        stopRockySound();
+    }
+});
+gameOverObserver.observe(gameOverScreen, { attributes: true, attributeFilter: ["hidden"] });
 
 const quizLevels = {
     1: {
@@ -840,12 +859,12 @@ const quizLevels = {
         correctAnswer: 1
     },
     83: {
-        question: "WAS IST EINS UND EINS GEMEINSAM?",
+        question: "WAS IST DEUTSCHES ENTERTAINMENT?",
         answers: [
-            "WLAN",
-            "11",
-            "TECHTELMECHTEL",
-            "M"
+            "STÜCK BROT",
+            "STEFAN RAAAAB",
+            "DIE ZEHNTAUSENDSTE FOLGE GALILEO",
+            "DZE PENNY EF DE REEPERBEHN"
         ],
         correctAnswer: 1
     },
@@ -853,12 +872,12 @@ const quizLevels = {
         question: "WAS IST DAS?",
         image: true,
         answers: [
-            "KEIPENSPIELE",
+            "KNEIPENSPIELE",
             "100!!!",
             "TIERQUÄLEREI",
             "DEUTSCHER SCHÄFERHUND"
         ],
-        correctAnswer: 1
+        correctAnswer: 2
     },
     85: {
         question: "''ÜBERALL NUR IDIOTEN''",
@@ -890,7 +909,7 @@ const quizLevels = {
             "SIE PICKT DIR INS GESICHT!!!?!??!",
             "ÜBER DIE STRAßE GEHEN",
             "PIEP",
-            ""
+            "SIE WIRD STRAßENRAPPER"
         ],
         correctAnswer: 3
     },
@@ -916,13 +935,6 @@ const quizLevels = {
     },
     91: {
         question: "LICHT?????",
-        answers: [
-            "",
-            "",
-            "",
-            ""
-        ],
-        correctAnswer: 3
     }
 
 
@@ -939,6 +951,11 @@ function stopBombTimer() {
         clearInterval(bombTimerId);
         bombTimerId = null;
     }
+
+    bomb10Sound.pause();
+    bomb10Sound.currentTime = 0;
+    bomb5Sound.pause();
+    bomb5Sound.currentTime = 0;
 }
 
 function resetBombState() {
@@ -966,6 +983,8 @@ function startBombLevel(levelData) {
     }
 
     stopBombTimer();
+    bomb10Sound.currentTime = 0;
+    bomb10Sound.play().catch(function() {});
     bombTimerId = setInterval(function() {
         if (bombCounter <= 0) {
             stopBombTimer();
@@ -995,6 +1014,8 @@ function startLevel86Bomb() {
     }
 
     stopBombTimer();
+    bomb5Sound.currentTime = 0;
+    bomb5Sound.play().catch(function() {});
     bombTimerId = setInterval(function() {
         if (bombCounter <= 0) {
             stopBombTimer();
@@ -1666,6 +1687,42 @@ function setupLevel52Switch() {
     answerButtons.appendChild(switchButton);
 }
 
+function setupLevel90Transition() {
+    stopRockySound();
+    document.body.classList.add("level-91");
+    levelStatus.hidden = true;
+    livesWrapper.hidden = true;
+    levelImage.hidden = true;
+    answerButtons.replaceChildren();
+    questionElement.hidden = false;
+    questionElement.classList.add("level-90-transition-text");
+    questionElement.textContent = "";
+    alarmSound.currentTime = 0;
+    alarmSound.play().catch(function() {});
+
+    levelTransitionTimeout = setTimeout(function() {
+        questionElement.textContent = "UND JETZT KOMMEN:";
+        levelTransitionTimeout = setTimeout(function() {
+            questionElement.textContent = "";
+            levelTransitionTimeout = setTimeout(function() {
+                questionElement.textContent = "DIE LETZTEN 10";
+                levelTransitionTimeout = setTimeout(function() {
+                    questionElement.textContent = "";
+                    levelTransitionTimeout = setTimeout(function() {
+                        levelImage.hidden = false;
+                        levelImage.classList.add("level-90-transition-number");
+                        levelImage.src = "sonstiges/Bilder/Zahlen/91.png";
+                        levelTransitionTimeout = setTimeout(function() {
+                            levelnumber = 91;
+                            showLevel(levelnumber);
+                        }, 2000);
+                    }, 300);
+                }, 5000);
+            }, 300);
+        }, 5000);
+    }, 3000);
+}
+
 function showLevel(level) {
     const levelData = quizLevels[level];
 
@@ -1685,6 +1742,8 @@ function showLevel(level) {
     stopLevel87Animation();
 
     levelNumberElement.textContent = level === 40 ? "???" : level;
+    levelStatus.hidden = false;
+    livesWrapper.hidden = false;
     if (!levelData || !levelData.bomb) {
         resetBombState();
     } else {
@@ -1697,8 +1756,11 @@ function showLevel(level) {
     document.documentElement.classList.toggle("level-52", level === 52);
     questionArea.classList.toggle("level-52-question-area", level === 52);
     document.body.classList.toggle("level-58", level === 58);
+    document.body.classList.toggle("level-91", level === 91);
     levelImage.classList.toggle("level-59-image", level === 59);
     levelImage.classList.toggle("level-20-image", level === 20);
+    levelImage.classList.remove("level-90-transition-number");
+    questionElement.classList.remove("level-90-transition-text");
     questionElement.hidden = false;
 
     if (level === 58) {
@@ -1981,6 +2043,11 @@ function showLevel(level) {
             }
 
             if (index + 1 === levelData.correctAnswer) {
+                if (level === 90) {
+                    setupLevel90Transition();
+                    return;
+                }
+
                 if (levelData.bomb) {
                     stopBombTimer();
                     bombCounter = 10;
@@ -2042,6 +2109,8 @@ startButton.addEventListener("click", function() {
     resetBombState();
     startContainer.hidden = true;
     quizScreen.hidden = false;
+    rockySound.currentTime = 0;
+    rockySound.play().catch(function() {});
     showLevel(levelnumber);
 });
 
