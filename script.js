@@ -18,6 +18,7 @@ const pistolShotSound = new Audio("sonstiges/Sounds/PistolShot.wav");
 pistolShotSound.volume = 0.5;
 const dingSound = new Audio("sonstiges/Sounds/DingSound.mp3");
 dingSound.volume = 0.5;
+const woofSound = new Audio("sonstiges/Sounds/Woof.mp3");
 let levelnumber = 0;
 let lives = 3;
 let level12BlinkTimeout;
@@ -30,6 +31,11 @@ let levelTransitionTimeout = null;
 let hasShownFirstLevel = false;
 let level58SecondAnswerClicks = 0;
 let level59Timeout = null;
+let level86BlinkInterval = null;
+let level86GreenTimeout = null;
+let level86FinishTimeout = null;
+let level87StartTimeout = null;
+let level87AnimationTimeout = null;
 
 function playPistolShotSound() {
     pistolShotSound.currentTime = 0;
@@ -764,7 +770,7 @@ const quizLevels = {
         answers: [
             "ANGEWANDTE FREIZEITWISSENSCHAFTEN",
             "PUPPENSPIEL :)",
-            "VEGAN FOOD MAMNAGEMENT",
+            "GENDER STUDIES",
             "SOCIAL ENGINEERING"
         ],
         correctAnswer: 4
@@ -781,14 +787,143 @@ const quizLevels = {
     },
     77: {
         question: "WO HAT DICH DIESES QUIZ BISHER BERÜHRT?",
+    },
+    78: {
+        question: "WIE VIELE LEBEN HAST DU?",
+        answers: [
+            "DREI",
+            "1",
+            "ZWEI",
+            "KEINS, BIN BEI LEVEL 78 UND SPIELE TAMS DUMME SPIELE"
+        ],
+        correctAnswer: 4
+    },
+    79: {
+        question: "WOFÜR STEHT DAS F IN F. SCOTT FITZGERALD?",
+        answers: [
+            "FITZGERALD",
+            "FISH",
+            "FUCK",
+            "GAR NICHTS"
+        ],
+        correctAnswer: 3
+    },
+    80: {
+        question: "WIE ENTSTEHT EINE TIGERENTE?",
+        answers: [
+            "INDEM SICH ZWEI FURRIES PAAREN",
+            "WIE PINOCHIO",
+            "SCHWERE TIERHALTUNG",
+            "GRRRRRRRR..."
+        ],
+        correctAnswer: 2
+    },
+    81: {
+        question: "WILLST DU MEIN ÜBERDIMENSIONALES RIESENPFERD HABEN?",
+        bomb: true,
+        answers: [
+            "JA, BITTE",
+            "AUF GAR KEINEN FALL",
+            "HÜÜÜÜÜÜÜÜÜÜÜ PPPFPFPFPPFFF",
+            "PABLO"
+        ],
+        correctAnswer: 2
+    },
+    82: {
+        question: "WAS IST EINS UND EINS GEMEINSAM?",
+        answers: [
+            "WLAN",
+            "11",
+            "TECHTELMECHTEL",
+            "M"
+        ],
+        correctAnswer: 1
+    },
+    83: {
+        question: "WAS IST EINS UND EINS GEMEINSAM?",
+        answers: [
+            "WLAN",
+            "11",
+            "TECHTELMECHTEL",
+            "M"
+        ],
+        correctAnswer: 1
+    },
+    84: {
+        question: "WAS IST DAS?",
+        image: true,
+        answers: [
+            "KEIPENSPIELE",
+            "100!!!",
+            "TIERQUÄLEREI",
+            "DEUTSCHER SCHÄFERHUND"
+        ],
+        correctAnswer: 1
+    },
+    85: {
+        question: "''ÜBERALL NUR IDIOTEN''",
+        answers: [
+            "-ARISTOTELES",
+            "-EINSTEIN",
+            "-GEORGE W. BUSH",
+            "-GREG"
+        ],
+        correctAnswer: 4
+    },
+    86: {
+        question: "WO IST ES?",
+        answers: ["", "", "", ""],
+    },
+    87: {
+        question: "",
+        answers: [
+            "WOOF",
+            "WOOF WOOF ",
+            "WOOF WOOF WOOF ",
+            "WOOF WOOF WOOF WOOF "
+        ],
+        correctAnswer: 3
+    },
+    88: {
+        question: "WAS MACHT DAS KLEINE KÜKEN?",
+        answers: [
+            "SIE PICKT DIR INS GESICHT!!!?!??!",
+            "ÜBER DIE STRAßE GEHEN",
+            "PIEP",
+            ""
+        ],
+        correctAnswer: 3
+    },
+    89: {
+        question: "WAS TUN GEGEN HAARAUSFALL?",
+        answers: [
+            "ALPICIN KOFFEIN SHAMPOO",
+            "ZU LIEBEN EIßT AUFZUGEBEN",
+            "EINE HAARTRANSPLANTATION IN TÜRKEI",
+            "MINOXIDIL"
+        ],
+        correctAnswer: 2
+    },
+    90: {
+        question: "WIE BEREITETST DU DICH AUF DIE LETZTEN 10 FRAGEN VOR?",
+        answers: [
+            "MIT VIEL ELAN UND EUPHORIE",
+            "EIN PREP-MEAL ZU SICH NEHMEN",
+            "GAR NICHT",
+            "MEINE FINGER KNACKSEN LASSEN"
+        ],
+        correctAnswer: 3
+    },
+    91: {
+        question: "LICHT?????",
+        answers: [
+            "",
+            "",
+            "",
+            ""
+        ],
+        correctAnswer: 3
     }
-
-
-
-
-
-
-
 
 
 };
@@ -851,6 +986,35 @@ function startBombLevel(levelData) {
     }, 1000);
 }
 
+function startLevel86Bomb() {
+    bombCounter = 5;
+    updateBombDisplay();
+
+    if (bombStatus) {
+        bombStatus.hidden = false;
+    }
+
+    stopBombTimer();
+    bombTimerId = setInterval(function() {
+        if (bombCounter <= 0) {
+            stopBombTimer();
+            return;
+        }
+
+        bombCounter -= 1;
+        updateBombDisplay();
+
+        if (bombCounter === 0) {
+            stopBombTimer();
+            playPistolShotSound();
+            lives = 0;
+            livesNumberElement.textContent = lives;
+            quizScreen.hidden = true;
+            gameOverScreen.hidden = false;
+        }
+    }, 1000);
+}
+
 function completeAnimationLevel() {
     stopBombTimer();
     bombCounter = 10;
@@ -883,6 +1047,193 @@ function stopLevel59Animation() {
         clearTimeout(level59Timeout);
         level59Timeout = null;
     }
+}
+
+function stopLevel86Sequence() {
+    if (level86BlinkInterval !== null) {
+        clearInterval(level86BlinkInterval);
+        level86BlinkInterval = null;
+    }
+
+    if (level86GreenTimeout !== null) {
+        clearTimeout(level86GreenTimeout);
+        level86GreenTimeout = null;
+    }
+
+    if (level86FinishTimeout !== null) {
+        clearTimeout(level86FinishTimeout);
+        level86FinishTimeout = null;
+    }
+}
+
+function stopLevel87Animation() {
+    if (level87StartTimeout !== null) {
+        clearTimeout(level87StartTimeout);
+        level87StartTimeout = null;
+    }
+
+    if (level87AnimationTimeout !== null) {
+        clearTimeout(level87AnimationTimeout);
+        level87AnimationTimeout = null;
+    }
+
+    woofSound.pause();
+    woofSound.currentTime = 0;
+}
+
+function setupLevel87Animation() {
+    const imagePath = "sonstiges/Bilder/Level 87/Unbenanntes_Projekt";
+
+    levelImage.hidden = false;
+    levelImage.classList.remove("has-border", "animation-image");
+    levelImage.alt = "Hund";
+    levelImage.src = `${imagePath} (1).png`;
+
+    level87StartTimeout = setTimeout(function() {
+        level87StartTimeout = null;
+        woofSound.currentTime = 0;
+        woofSound.play().catch(function() {});
+
+        let cycle = 0;
+        function showNextDogState() {
+            if (cycle >= 3) {
+                level87AnimationTimeout = null;
+                return;
+            }
+
+            levelImage.src = `${imagePath} (2).png`;
+            const stateTwoDuration = cycle === 0 ? 1000 : 1200;
+            level87AnimationTimeout = setTimeout(function() {
+                levelImage.src = `${imagePath} (1).png`;
+                cycle += 1;
+                level87AnimationTimeout = setTimeout(showNextDogState, 200);
+            }, stateTwoDuration);
+        }
+
+        showNextDogState();
+    }, 10000);
+}
+
+function setupLevel87Answers(levelData) {
+    levelData.answers.forEach(function(answer, index) {
+        const answerButton = document.createElement("button");
+
+        answerButton.className = "answer-button";
+        answerButton.type = "button";
+        answerButton.textContent = answer;
+        answerButton.addEventListener("click", function() {
+            if (index + 1 === levelData.correctAnswer) {
+                levelnumber += 1;
+                showLevel(levelnumber);
+                return;
+            }
+
+            playPistolShotSound();
+            lives -= 1;
+            livesNumberElement.textContent = lives;
+
+            if (lives === 0) {
+                stopBombTimer();
+                quizScreen.hidden = true;
+                gameOverScreen.hidden = false;
+            }
+        });
+        answerButtons.appendChild(answerButton);
+    });
+}
+
+function setupLevel86Buttons(levelData) {
+    const buttons = [];
+    let highlightedIndex = 0;
+    let finalIndex = null;
+    let sequenceFinished = false;
+
+    questionElement.hidden = true;
+
+    for (let index = 0; index < levelData.answers.length; index += 1) {
+        const answerButton = document.createElement("button");
+
+        answerButton.className = "answer-button level-86-button";
+        answerButton.type = "button";
+        answerButton.addEventListener("click", function() {
+            if (!sequenceFinished) {
+                return;
+            }
+
+            if (index + 1 === finalIndex + 1) {
+                resetBombState();
+                levelnumber += 1;
+                showLevel(levelnumber);
+            } else {
+                playPistolShotSound();
+                lives -= 1;
+                livesNumberElement.textContent = lives;
+
+                if (lives === 0) {
+                    stopBombTimer();
+                    quizScreen.hidden = true;
+                    gameOverScreen.hidden = false;
+                }
+            }
+        });
+        buttons.push(answerButton);
+        answerButtons.appendChild(answerButton);
+    }
+
+    buttons[highlightedIndex].classList.add("is-highlighted");
+    level86BlinkInterval = setInterval(function() {
+        buttons[highlightedIndex].classList.remove("is-highlighted");
+        let nextIndex;
+        do {
+            nextIndex = Math.floor(Math.random() * buttons.length);
+        } while (nextIndex === highlightedIndex);
+        highlightedIndex = nextIndex;
+        buttons[highlightedIndex].classList.add("is-highlighted");
+    }, 50);
+
+    const greenDelay = 1000 + Math.random() * 1000;
+    const finishDelay = Math.max(greenDelay + 100, 2000 + Math.random() * 1000);
+
+    level86GreenTimeout = setTimeout(function() {
+        level86GreenTimeout = null;
+        clearInterval(level86BlinkInterval);
+        level86BlinkInterval = null;
+        const redIndex = highlightedIndex;
+        do {
+            finalIndex = Math.floor(Math.random() * buttons.length);
+        } while (finalIndex === redIndex);
+        buttons[redIndex].classList.remove("is-highlighted");
+        buttons[finalIndex].classList.add("is-green");
+
+        setTimeout(function() {
+            buttons[finalIndex].classList.remove("is-green");
+            let nextIndex;
+            do {
+                nextIndex = Math.floor(Math.random() * buttons.length);
+            } while (nextIndex === finalIndex);
+            highlightedIndex = nextIndex;
+            buttons[highlightedIndex].classList.add("is-highlighted");
+            level86BlinkInterval = setInterval(function() {
+                buttons[highlightedIndex].classList.remove("is-highlighted");
+                let nextIndex;
+                do {
+                    nextIndex = Math.floor(Math.random() * buttons.length);
+                } while (nextIndex === highlightedIndex);
+                highlightedIndex = nextIndex;
+                buttons[highlightedIndex].classList.add("is-highlighted");
+            }, 50);
+        }, 50);
+    }, greenDelay);
+
+    level86FinishTimeout = setTimeout(function() {
+        level86FinishTimeout = null;
+        clearInterval(level86BlinkInterval);
+        level86BlinkInterval = null;
+        buttons[highlightedIndex].classList.remove("is-highlighted");
+        sequenceFinished = true;
+        questionElement.hidden = false;
+            startLevel86Bomb();
+    }, finishDelay);
 }
 
 function loseLevel59Life() {
@@ -1327,9 +1678,11 @@ function showLevel(level) {
     clearTimeout(level12BlinkTimeout);
     clearTimeout(level12BlinkResetTimeout);
     clearTimeout(levelTransitionTimeout);
+    stopLevel86Sequence();
     levelTransitionTimeout = null;
     stopImageAnimation();
     stopLevel59Animation();
+    stopLevel87Animation();
 
     levelNumberElement.textContent = level === 40 ? "???" : level;
     if (!levelData || !levelData.bomb) {
@@ -1338,7 +1691,7 @@ function showLevel(level) {
         startBombLevel(levelData);
     }
     answerFeedback.textContent = "";
-    levelStatus.classList.toggle("is-clickable", level === 4);
+    levelStatus.classList.toggle("is-clickable", level === 4 || level === 82);
     questionElement.classList.toggle("level-21-question", level === 21);
     document.body.classList.toggle("level-52", level === 52);
     document.documentElement.classList.toggle("level-52", level === 52);
@@ -1366,6 +1719,7 @@ function showLevel(level) {
                 const noButton = document.createElement("button");
 
                 noButton.className = "answer-button";
+
                 noButton.type = "button";
                 noButton.textContent = "NÖ";
                 noButton.addEventListener("click", function() {
@@ -1448,6 +1802,22 @@ function showLevel(level) {
             levelImage.hidden = true;
             answerButtons.replaceChildren();
             setupLevel77Images();
+            return;
+        }
+
+        if (level === 86) {
+            levelImage.hidden = true;
+            answerButtons.replaceChildren();
+            setupLevel86Buttons(levelData);
+            return;
+        }
+
+        if (level === 87) {
+            questionElement.hidden = true;
+            levelImage.hidden = false;
+            answerButtons.replaceChildren();
+            setupLevel87Animation();
+            setupLevel87Answers(levelData);
             return;
         }
     }
@@ -1696,6 +2066,25 @@ debugLevelForm.addEventListener("submit", function(event) {
 });
 
 levelStatus.addEventListener("click", function() {
+    if (levelnumber === 82) {
+        playPistolShotSound();
+        lives -= 1;
+        livesNumberElement.textContent = lives;
+
+        if (lives === 0) {
+            stopBombTimer();
+            bombCounter = 10;
+            if (bombStatus) {
+                bombStatus.hidden = true;
+            }
+            updateBombDisplay();
+            quizScreen.hidden = true;
+            gameOverScreen.hidden = false;
+        }
+
+        return;
+    }
+
     if (levelnumber === 4) {
         levelnumber = 5;
         showLevel(levelnumber);

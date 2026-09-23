@@ -204,6 +204,12 @@ body.level-52 .question {
     height: min(42vh, 36rem);
 }
 
+.level-image.level-81-horse-image {
+    width: min(94vw, 70rem);
+    height: min(82svh, 70rem);
+    margin-top: 0;
+}
+
 .level-image.has-border {
     border: var(--quiz-border-width) solid black;
 }
@@ -455,6 +461,19 @@ body.level-52 .question {
 
 .answer-button.is-blinking {
     background-color: green;
+}
+
+.level-86-button {
+    min-height: clamp(3rem, 8vw, 5rem);
+    cursor: pointer;
+}
+
+.level-86-button.is-highlighted {
+    background-color: red;
+}
+
+.level-86-button.is-green {
+    background-color: #ff1f00;
 }
 
 .answer-feedback {
