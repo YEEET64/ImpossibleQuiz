@@ -33,6 +33,17 @@ body.level-58 {
 
 body.level-91 {
     background-color: black;
+    align-items: flex-start;
+    scrollbar-width: none;
+}
+
+body.level-92 {
+    background-color: white;
+}
+
+body.level-92-transition {
+    background-color: black;
+    align-items: center;
 }
 
 body.level-52::-webkit-scrollbar {
@@ -45,6 +56,21 @@ html.level-52 {
 
 html.level-52::-webkit-scrollbar {
     display: none;
+}
+
+html.level-91 {
+    scrollbar-width: none;
+}
+
+html.level-91::-webkit-scrollbar,
+body.level-91::-webkit-scrollbar {
+    display: none;
+}
+
+.level-92-transition-number {
+    width: min(80vw, 32rem);
+    height: min(60vh, 24rem);
+    margin-top: 0;
 }
 
 .start-container {
@@ -175,6 +201,16 @@ body.level-91 .question {
     color: white;
 }
 
+body.level-91 .game-status {
+    position: fixed;
+    z-index: 2;
+}
+
+body.level-91 .lives-wrapper {
+    position: fixed;
+    z-index: 2;
+}
+
 .question.level-90-transition-text {
     color: white;
     font-size: clamp(2rem, 7vw, 5rem);
@@ -187,6 +223,23 @@ body.level-52 .question {
 .level-52-question-area .answer-buttons {
     min-height: 1440rem;
     justify-content: flex-end;
+}
+
+.level-91-question-area .answer-buttons {
+    position: relative;
+    min-height: 1200rem;
+    margin-top: 55vh;
+}
+
+.level-91-switch-button {
+    position: absolute;
+    top: -100vh;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+body.level-91 .question-area {
+    padding-top: calc(clamp(5rem, 14vh, 8rem) + 400px);
 }
 
 .question-word-button {
@@ -221,6 +274,14 @@ body.level-52 .question {
     width: min(94vw, 70rem);
     height: min(82svh, 70rem);
     margin-top: 0;
+}
+
+.level-image.level-92-image {
+    width: min(90vw, 42rem);
+    height: min(70vh, 34rem);
+    margin-top: 0;
+    cursor: pointer;
+    touch-action: manipulation;
 }
 
 .level-image.has-border {
@@ -530,4 +591,14 @@ body.level-52 .question {
     width: min(80vw, 32rem);
     height: min(60vh, 24rem);
     margin-top: 0;
+}
+
+.level-image.level-90-transition-number,
+.level-image.level-92-transition-number {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 3;
+    margin: 0;
+    transform: translate(-50%, -50%);
 }

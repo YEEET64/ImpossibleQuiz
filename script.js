@@ -935,7 +935,13 @@ const quizLevels = {
     },
     91: {
         question: "LICHT?????",
+        bomb: true
+    },
+    92: {
+        question: "HAMPELMANN 75!",
+        bomb: true
     }
+
 
 
 };
@@ -1687,6 +1693,69 @@ function setupLevel52Switch() {
     answerButtons.appendChild(switchButton);
 }
 
+function setupLevel91Switch() {
+    const switchButton = document.createElement("button");
+    const switchImage = document.createElement("img");
+
+    switchButton.className = "level-52-switch-button level-91-switch-button";
+    switchButton.type = "button";
+    switchButton.setAttribute("aria-label", "Lichtschalter für Level 92");
+    switchImage.src = "sonstiges/Bilder/Bild52.png";
+    switchImage.alt = "Lichtschalter";
+    switchButton.appendChild(switchImage);
+    switchButton.addEventListener("click", function() {
+        stopBombTimer();
+        document.body.classList.add("level-92-transition");
+        levelStatus.hidden = true;
+        livesWrapper.hidden = true;
+        questionElement.hidden = true;
+        levelImage.hidden = false;
+        levelImage.classList.add("level-92-transition-number");
+        levelImage.src = "sonstiges/Bilder/Zahlen/92.png";
+        answerButtons.replaceChildren();
+        levelTransitionTimeout = setTimeout(function() {
+            levelnumber = 92;
+            showLevel(levelnumber);
+        }, 1500);
+    });
+
+    answerButtons.appendChild(switchButton);
+}
+
+function setupLevel92Images() {
+    let clickCount = 0;
+    let stateNumber = 1;
+    let isZState = false;
+
+    levelImage.hidden = false;
+    levelImage.classList.remove("has-border", "animation-image", "level-92-transition-number");
+    levelImage.classList.add("level-92-image");
+    levelImage.alt = "Bild für Level 92";
+
+    function updateImage() {
+        const prefix = isZState ? "ZUnbenanntes_Projekt" : "Unbenanntes_Projekt";
+        levelImage.src = `sonstiges/Bilder/Level 92/${prefix} (${stateNumber}).png`;
+    }
+
+    updateImage();
+    levelImage.addEventListener("click", function() {
+        clickCount += 1;
+        isZState = !isZState;
+
+        if (clickCount % 15 === 0) {
+            stateNumber += 1;
+            isZState = false;
+        }
+
+        updateImage();
+
+        if (clickCount === 75) {
+            levelnumber += 1;
+            showLevel(levelnumber);
+        }
+    });
+}
+
 function setupLevel90Transition() {
     stopRockySound();
     document.body.classList.add("level-91");
@@ -1726,6 +1795,10 @@ function setupLevel90Transition() {
 function showLevel(level) {
     const levelData = quizLevels[level];
 
+    if (level !== 91 && document.body.classList.contains("level-91")) {
+        window.scrollTo(0, 0);
+    }
+
     if (hasShownFirstLevel) {
         playDingSound();
     } else {
@@ -1757,10 +1830,15 @@ function showLevel(level) {
     questionArea.classList.toggle("level-52-question-area", level === 52);
     document.body.classList.toggle("level-58", level === 58);
     document.body.classList.toggle("level-91", level === 91);
+    document.documentElement.classList.toggle("level-91", level === 91);
+    document.body.classList.toggle("level-92-transition", false);
+    document.body.classList.toggle("level-92", level === 92);
+    document.documentElement.classList.toggle("level-92", level === 92);
     levelImage.classList.toggle("level-59-image", level === 59);
     levelImage.classList.toggle("level-20-image", level === 20);
     levelImage.classList.remove("level-90-transition-number");
     questionElement.classList.remove("level-90-transition-text");
+    questionArea.classList.toggle("level-91-question-area", level === 91);
     questionElement.hidden = false;
 
     if (level === 58) {
@@ -1857,6 +1935,25 @@ function showLevel(level) {
             levelImage.hidden = true;
             answerButtons.replaceChildren();
             setupLevel52Switch();
+            return;
+        }
+
+        if (level === 91) {
+            levelImage.hidden = true;
+            answerButtons.replaceChildren();
+            setupLevel91Switch();
+            setTimeout(function() {
+                window.scrollTo(0, 400);
+                document.documentElement.scrollTop = 400;
+                document.body.scrollTop = 400;
+            }, 0);
+            return;
+        }
+
+        if (level === 92) {
+            questionElement.hidden = false;
+            answerButtons.replaceChildren();
+            setupLevel92Images();
             return;
         }
 
