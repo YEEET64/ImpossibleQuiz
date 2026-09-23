@@ -326,6 +326,44 @@ body.level-52 .question {
     margin: 0 auto;
 }
 
+.level-77-image-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.2rem, 1vw, 0.5rem);
+    width: min(100%, 36rem);
+    margin: 0 auto;
+    padding: clamp(0.3rem, 1vw, 0.6rem);
+    box-sizing: border-box;
+    border: var(--quiz-border-width) solid black;
+    background: black;
+}
+
+.level-77-image-button {
+    aspect-ratio: 1;
+    min-width: 0;
+    padding: 0;
+    border: var(--quiz-border-width) solid transparent;
+    background: white;
+    cursor: pointer;
+    overflow: hidden;
+    touch-action: manipulation;
+}
+
+.level-77-image-button img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.level-77-image-button.is-selected {
+    border-color: blue;
+}
+
+.level-77-submit {
+    margin-top: 0;
+}
+
 .level-69-board {
     position: relative;
     display: grid;

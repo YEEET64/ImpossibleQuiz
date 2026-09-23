@@ -778,6 +778,9 @@ const quizLevels = {
             "SIE KÖNNEN MALEN"
         ],
         correctAnswer: 2
+    },
+    77: {
+        question: "WO HAT DICH DIESES QUIZ BISHER BERÜHRT?",
     }
 
 
@@ -1113,6 +1116,63 @@ function setupLevel50Images() {
     answerButtons.appendChild(imageStack);
 }
 
+function setupLevel77Images() {
+    const correctImages = new Set([1, 2, 4, 5, 6, 7, 8, 9]);
+    const selectedImages = new Set();
+    const imageGrid = document.createElement("div");
+    const checkButton = document.createElement("button");
+
+    imageGrid.className = "level-77-image-grid";
+
+    for (let imageNumber = 1; imageNumber <= 9; imageNumber += 1) {
+        const imageButton = document.createElement("button");
+        const image = document.createElement("img");
+
+        imageButton.className = "level-77-image-button";
+        imageButton.type = "button";
+        imageButton.setAttribute("aria-label", `Bild ${imageNumber}`);
+        image.src = `sonstiges/Bilder/Level 77/Unbenanntes_Projekt (${imageNumber}).png`;
+        image.alt = `Bild ${imageNumber}`;
+        imageButton.appendChild(image);
+        imageButton.addEventListener("click", function() {
+            if (selectedImages.has(imageNumber)) {
+                selectedImages.delete(imageNumber);
+                imageButton.classList.remove("is-selected");
+                return;
+            }
+
+            selectedImages.add(imageNumber);
+            imageButton.classList.add("is-selected");
+        });
+        imageGrid.appendChild(imageButton);
+    }
+
+    checkButton.className = "answer-button level-77-submit";
+    checkButton.type = "button";
+    checkButton.textContent = "PRÜFEN";
+    checkButton.addEventListener("click", function() {
+        if (selectedImages.size === correctImages.size && [...correctImages].every(function(imageNumber) {
+            return selectedImages.has(imageNumber);
+        })) {
+            levelnumber += 1;
+            showLevel(levelnumber);
+            return;
+        }
+
+        playPistolShotSound();
+        lives -= 1;
+        livesNumberElement.textContent = lives;
+
+        if (lives === 0) {
+            stopBombTimer();
+            quizScreen.hidden = true;
+            gameOverScreen.hidden = false;
+        }
+    });
+
+    answerButtons.append(imageGrid, checkButton);
+}
+
 function setupLevel69Hanoi() {
     const towers = [[1, 2, 3], [], []];
     const towerButtons = [];
@@ -1381,6 +1441,13 @@ function showLevel(level) {
             levelImage.hidden = true;
             answerButtons.replaceChildren();
             setupLevel52Switch();
+            return;
+        }
+
+        if (level === 77) {
+            levelImage.hidden = true;
+            answerButtons.replaceChildren();
+            setupLevel77Images();
             return;
         }
     }
