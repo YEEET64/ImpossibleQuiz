@@ -1836,6 +1836,7 @@ function showLevel(level) {
     document.documentElement.classList.toggle("level-92", level === 92);
     levelImage.classList.toggle("level-59-image", level === 59);
     levelImage.classList.toggle("level-20-image", level === 20);
+    levelImage.classList.toggle("level-81-horse-image", level === 81);
     levelImage.classList.remove("level-90-transition-number");
     questionElement.classList.remove("level-90-transition-text");
     questionArea.classList.toggle("level-91-question-area", level === 91);
@@ -1912,7 +1913,7 @@ function showLevel(level) {
             levelImage.classList.remove("animation-image");
             levelImage.alt = "Bild für Level 32";
             levelImage.src = "sonstiges/Bilder/Bild32.png";
-            answerButtons.replaceChildren();
+            answerButtons.replaceChi86ldren();
             setupLevel32Input();
             return;
         }
@@ -2045,6 +2046,20 @@ function showLevel(level) {
         answerButton.type = "button";
         answerButton.textContent = answer.trim() === "" ? "\u00a0" : answer;
         answerButton.addEventListener("click", function() {
+            if (level === 81 && index === 0) {
+                stopBombTimer();
+                bombCounter = 10;
+                levelStatus.hidden = true;
+                livesWrapper.hidden = true;
+                questionElement.hidden = true;
+                answerButtons.replaceChildren();
+                updateBombDisplay();
+                levelImage.hidden = false;
+                levelImage.alt = "Überdimensionales Riesenpferd";
+                levelImage.src = "sonstiges/Bilder/Pferd.png";
+                return;
+            }
+
             if (level === 58) {
                 if (index === 1) {
                     if (level58SecondAnswerClicks >= 20) {
