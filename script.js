@@ -954,7 +954,7 @@ const quizLevels = {
     }
 
 
-};
+}; 
 
 function updateBombDisplay() {
     if (bombImage) {
