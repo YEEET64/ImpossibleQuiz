@@ -42,9 +42,54 @@ body.level-93 {
     background-color: white;
 }
 
+body.level-98 {
+    background-color: red;
+}
+
+body.level-98 .game-status,
+body.level-98 .question,
+body.level-98 .answer-feedback {
+    color: white;
+}
+
+body.level-98 .answer-button {
+    background-color: red;
+    border-color: white;
+    color: white;
+}
+
+body.level-101 .question-area {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100svh - 2rem);
+    box-sizing: border-box;
+    padding-top: 0;
+}
+
+body.level-101 .question {
+    color: blue;
+}
+
+.level-image.level-101-prize {
+    width: min(80vw, 30rem);
+    height: auto;
+    margin-top: 2rem;
+}
+
 body.level-92-transition {
     background-color: black;
     align-items: center;
+}
+
+body.level-99-transition {
+    background-color: black;
+    align-items: center;
+}
+
+body.level-99-transition .question {
+    color: white;
 }
 
 body.level-52::-webkit-scrollbar {
@@ -86,8 +131,8 @@ body.level-91::-webkit-scrollbar {
     aspect-ratio: 1;
     width: 100%;
     padding: 0;
-    border: var(--quiz-border-width) solid black;
-    background: white;
+    border: 0;
+    background: transparent;
     cursor: pointer;
     overflow: hidden;
     touch-action: manipulation;
@@ -97,6 +142,34 @@ body.level-91::-webkit-scrollbar {
     display: block;
     width: 100%;
     height: 100%;
+    object-fit: contain;
+}
+
+.level-95-sequence-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: clamp(1rem, 2vw, 1.8rem);
+    width: min(100%, 42rem);
+    margin: clamp(2rem, 6vw, 4rem) auto 0;
+}
+
+.level-95-sequence-button {
+    flex: 1 1 0;
+    max-width: 12rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    overflow: hidden;
+    touch-action: manipulation;
+}
+
+.level-95-sequence-button img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
     object-fit: contain;
 }
 
