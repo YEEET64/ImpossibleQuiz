@@ -940,8 +940,12 @@ const quizLevels = {
     92: {
         question: "HAMPELMANN 75!",
         bomb: true
+    },
+    93: {
+        question: "MACHE DAS GEGENTEIL! DRÜCKE AUF DIE LÄCHELNDE GROßE SONNE!",
+        answers: [],
+        bomb: true
     }
-
 
 
 };
@@ -1699,7 +1703,7 @@ function setupLevel91Switch() {
 
     switchButton.className = "level-52-switch-button level-91-switch-button";
     switchButton.type = "button";
-    switchButton.setAttribute("aria-label", "Lichtschalter für Level 92");
+    switchButton.setAttribute("aria-label", "Lichtschalter für Level 93");
     switchImage.src = "sonstiges/Bilder/Bild52.png";
     switchImage.alt = "Lichtschalter";
     switchButton.appendChild(switchImage);
@@ -1711,10 +1715,10 @@ function setupLevel91Switch() {
         questionElement.hidden = true;
         levelImage.hidden = false;
         levelImage.classList.add("level-92-transition-number");
-        levelImage.src = "sonstiges/Bilder/Zahlen/92.png";
+        levelImage.src = "sonstiges/Bilder/Zahlen/93.png";
         answerButtons.replaceChildren();
         levelTransitionTimeout = setTimeout(function() {
-            levelnumber = 92;
+            levelnumber = 93;
             showLevel(levelnumber);
         }, 1500);
     });
@@ -1833,6 +1837,7 @@ function showLevel(level) {
     document.documentElement.classList.toggle("level-91", level === 91);
     document.body.classList.toggle("level-92-transition", false);
     document.body.classList.toggle("level-92", level === 92);
+    document.body.classList.toggle("level-93", level === 93);
     document.documentElement.classList.toggle("level-92", level === 92);
     levelImage.classList.toggle("level-59-image", level === 59);
     levelImage.classList.toggle("level-20-image", level === 20);
