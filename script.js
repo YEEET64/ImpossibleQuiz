@@ -947,6 +947,10 @@ const quizLevels = {
         bomb: true,
         answers: ["", "", "", ""],
         correctAnswer: 1
+    },
+    94: {
+        question: "MACHE DAS GEGENTEIL! : DRÜCKE NICHT AUF DIE GELBE GLÜCKLICHE GROßE SONNE",
+        bomb: true
     }
 
 
@@ -1849,8 +1853,7 @@ function setupLevel93Math() {
                 answerButton.addEventListener("click", function() {
                     if (index === correctPosition) {
                         stopBombTimer();
-                        levelnumber += 1;
-                        showLevel(levelnumber);
+                        showLevelTransition(94);
                         return;
                     }
 
@@ -1886,6 +1889,51 @@ function setupLevel93Math() {
     }
 
     showNextSequencePart();
+}
+
+function setupLevel94Grid() {
+    const grid = document.createElement("div");
+    grid.className = "level-94-image-grid";
+
+    for (let index = 1; index <= 16; index += 1) {
+        const imageButton = document.createElement("button");
+        const image = document.createElement("img");
+
+        imageButton.type = "button";
+        imageButton.className = "level-94-image-button";
+        imageButton.setAttribute("aria-label", `Bild ${index}`);
+        image.src = `sonstiges/Bilder/Level 94/Bild${index}.png`;
+        image.alt = `Bild ${index}`;
+
+        imageButton.appendChild(image);
+        imageButton.addEventListener("click", function() {
+            if (index === 4) {
+                stopBombTimer();
+                levelnumber += 1;
+                showLevel(levelnumber);
+                return;
+            }
+
+            playPistolShotSound();
+            lives -= 1;
+            livesNumberElement.textContent = lives;
+
+            if (lives <= 0) {
+                stopBombTimer();
+                bombCounter = 10;
+                if (bombStatus) {
+                    bombStatus.hidden = true;
+                }
+                updateBombDisplay();
+                quizScreen.hidden = true;
+                gameOverScreen.hidden = false;
+            }
+        });
+
+        grid.appendChild(imageButton);
+    }
+
+    answerButtons.appendChild(grid);
 }
 
 function setupLevel90Transition() {
@@ -2099,6 +2147,15 @@ function showLevel(level) {
             levelImage.hidden = true;
             answerButtons.replaceChildren();
             setupLevel93Math();
+            return;
+        }
+
+        if (level === 94) {
+            questionElement.hidden = false;
+            levelImage.hidden = true;
+            answerButtons.replaceChildren();
+            questionElement.textContent = levelData.question;
+            setupLevel94Grid();
             return;
         }
 

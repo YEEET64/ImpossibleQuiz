@@ -74,6 +74,32 @@ body.level-91::-webkit-scrollbar {
     margin-top: 0;
 }
 
+.level-94-image-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.4rem, 1vw, 0.8rem);
+    width: min(100%, 42rem);
+    margin: clamp(1rem, 3vw, 2rem) auto 0;
+}
+
+.level-94-image-button {
+    aspect-ratio: 1;
+    width: 100%;
+    padding: 0;
+    border: var(--quiz-border-width) solid black;
+    background: white;
+    cursor: pointer;
+    overflow: hidden;
+    touch-action: manipulation;
+}
+
+.level-94-image-button img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
 .start-container {
     display: flex;
     flex-direction: column;
