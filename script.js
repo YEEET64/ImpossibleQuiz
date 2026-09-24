@@ -43,6 +43,7 @@ let level86GreenTimeout = null;
 let level86FinishTimeout = null;
 let level87StartTimeout = null;
 let level87AnimationTimeout = null;
+let level93SequenceTimeout = null;
 
 function playPistolShotSound() {
     pistolShotSound.currentTime = 0;
@@ -938,13 +939,14 @@ const quizLevels = {
         bomb: true
     },
     92: {
-        question: "HAMPELMANN 75!",
+        question: "HAMPELMANN 70!",
         bomb: true
     },
     93: {
-        question: "MACHE DAS GEGENTEIL! DRÜCKE AUF DIE LÄCHELNDE GROßE SONNE!",
-        answers: [],
-        bomb: true
+        question: "RECHNE!",
+        bomb: true,
+        answers: ["", "", "", ""],
+        correctAnswer: 1
     }
 
 
@@ -1110,6 +1112,13 @@ function stopLevel87Animation() {
 
     woofSound.pause();
     woofSound.currentTime = 0;
+}
+
+function stopLevel93Sequence() {
+    if (level93SequenceTimeout !== null) {
+        clearTimeout(level93SequenceTimeout);
+        level93SequenceTimeout = null;
+    }
 }
 
 function setupLevel87Animation() {
@@ -1697,30 +1706,39 @@ function setupLevel52Switch() {
     answerButtons.appendChild(switchButton);
 }
 
+function showLevelTransition(nextLevel) {
+    stopBombTimer();
+    resetBombState();
+
+    document.body.classList.add("level-92-transition");
+    levelStatus.hidden = true;
+    livesWrapper.hidden = true;
+    questionElement.hidden = true;
+    levelImage.hidden = false;
+    levelImage.classList.remove("level-90-transition-number", "level-92-image");
+    levelImage.classList.add("level-92-transition-number");
+    levelImage.src = `sonstiges/Bilder/Zahlen/${nextLevel}.png`;
+    answerButtons.replaceChildren();
+
+    levelTransitionTimeout = setTimeout(function() {
+        levelnumber = nextLevel;
+        showLevel(levelnumber);
+    }, 1500);
+}
+
 function setupLevel91Switch() {
     const switchButton = document.createElement("button");
     const switchImage = document.createElement("img");
 
     switchButton.className = "level-52-switch-button level-91-switch-button";
     switchButton.type = "button";
-    switchButton.setAttribute("aria-label", "Lichtschalter für Level 93");
+    switchButton.setAttribute("aria-label", "Lichtschalter für Level 92");
     switchImage.src = "sonstiges/Bilder/Bild52.png";
     switchImage.alt = "Lichtschalter";
     switchButton.appendChild(switchImage);
     switchButton.addEventListener("click", function() {
         stopBombTimer();
-        document.body.classList.add("level-92-transition");
-        levelStatus.hidden = true;
-        livesWrapper.hidden = true;
-        questionElement.hidden = true;
-        levelImage.hidden = false;
-        levelImage.classList.add("level-92-transition-number");
-        levelImage.src = "sonstiges/Bilder/Zahlen/93.png";
-        answerButtons.replaceChildren();
-        levelTransitionTimeout = setTimeout(function() {
-            levelnumber = 93;
-            showLevel(levelnumber);
-        }, 1500);
+        showLevelTransition(92);
     });
 
     answerButtons.appendChild(switchButton);
@@ -1746,18 +1764,128 @@ function setupLevel92Images() {
         clickCount += 1;
         isZState = !isZState;
 
-        if (clickCount % 15 === 0) {
+        if (clickCount % 14 === 0) {
             stateNumber += 1;
             isZState = false;
         }
 
         updateImage();
 
-        if (clickCount === 75) {
-            levelnumber += 1;
-            showLevel(levelnumber);
+        if (clickCount === 70) {
+            showLevelTransition(93);
         }
     });
+}
+
+function createLevel93AnswerSet(target) {
+    const correctPosition = Math.floor(Math.random() * 4);
+    const positionMode = ["lowest", "middle", "highest"][Math.floor(Math.random() * 3)];
+    const answerValues = Array(4).fill(0);
+    let distractorBase;
+
+    if (positionMode === "lowest") {
+        distractorBase = [target + 1, target + 2, target + 3];
+    } else if (positionMode === "middle") {
+        distractorBase = [target - 1, target + 1, target + 2];
+    } else {
+        distractorBase = [target - 3, target - 2, target - 1];
+    }
+
+    const otherPositions = [0, 1, 2, 3].filter(function(index) {
+        return index !== correctPosition;
+    });
+
+    answerValues[correctPosition] = target;
+    otherPositions.forEach(function(position, index) {
+        answerValues[position] = distractorBase[index];
+    });
+
+    return {
+        correctPosition: correctPosition,
+        answerValues: answerValues,
+        positionMode: positionMode
+    };
+}
+
+function setupLevel93Math() {
+    document.body.classList.remove("level-92-transition");
+    document.body.classList.add("level-93");
+    questionElement.hidden = false;
+    levelImage.hidden = true;
+    answerButtons.replaceChildren();
+    questionElement.textContent = "";
+
+    const values = Array.from({ length: 5 }, function() {
+        return Math.floor(Math.random() * 9) + 1;
+    });
+    const target = values.reduce(function(total, value) {
+        return total + value;
+    }, 0);
+    const answerSet = createLevel93AnswerSet(target);
+    const answerValues = answerSet.answerValues;
+    const correctPosition = answerSet.correctPosition;
+
+    const sequenceSymbols = [];
+    values.forEach(function(value, index) {
+        sequenceSymbols.push(String(value));
+        if (index < values.length - 1) {
+            sequenceSymbols.push("+");
+        }
+    });
+
+    let sequenceIndex = 0;
+
+    function showNextSequencePart() {
+        if (sequenceIndex >= sequenceSymbols.length) {
+            questionElement.textContent = "RECHNE!";
+            answerButtons.replaceChildren();
+            startBombLevel(quizLevels[93]);
+
+            answerValues.forEach(function(value, index) {
+                const answerButton = document.createElement("button");
+                answerButton.className = "answer-button";
+                answerButton.type = "button";
+                answerButton.textContent = String(value);
+                answerButton.addEventListener("click", function() {
+                    if (index === correctPosition) {
+                        stopBombTimer();
+                        levelnumber += 1;
+                        showLevel(levelnumber);
+                        return;
+                    }
+
+                    playPistolShotSound();
+                    lives -= 1;
+                    livesNumberElement.textContent = lives;
+
+                    if (lives <= 0) {
+                        stopBombTimer();
+                        bombCounter = 10;
+                        if (bombStatus) {
+                            bombStatus.hidden = true;
+                        }
+                        updateBombDisplay();
+                        quizScreen.hidden = true;
+                        gameOverScreen.hidden = false;
+                        return;
+                    }
+                });
+                answerButtons.appendChild(answerButton);
+            });
+            return;
+        }
+
+        questionElement.textContent = sequenceSymbols[sequenceIndex];
+        sequenceIndex += 1;
+
+        level93SequenceTimeout = setTimeout(function() {
+            level93SequenceTimeout = null;
+            questionElement.textContent = "";
+            level93SequenceTimeout = setTimeout(showNextSequencePart, 90);
+        }, 300);
+    }
+
+    showNextSequencePart();
 }
 
 function setupLevel90Transition() {
@@ -1813,6 +1941,7 @@ function showLevel(level) {
     clearTimeout(level12BlinkResetTimeout);
     clearTimeout(levelTransitionTimeout);
     stopLevel86Sequence();
+    stopLevel93Sequence();
     levelTransitionTimeout = null;
     stopImageAnimation();
     stopLevel59Animation();
@@ -1821,7 +1950,9 @@ function showLevel(level) {
     levelNumberElement.textContent = level === 40 ? "???" : level;
     levelStatus.hidden = false;
     livesWrapper.hidden = false;
-    if (!levelData || !levelData.bomb) {
+    if (level === 93) {
+        resetBombState();
+    } else if (!levelData || !levelData.bomb) {
         resetBombState();
     } else {
         startBombLevel(levelData);
@@ -1960,6 +2091,14 @@ function showLevel(level) {
             questionElement.hidden = false;
             answerButtons.replaceChildren();
             setupLevel92Images();
+            return;
+        }
+
+        if (level === 93) {
+            questionElement.hidden = false;
+            levelImage.hidden = true;
+            answerButtons.replaceChildren();
+            setupLevel93Math();
             return;
         }
 
